@@ -1,7 +1,9 @@
 package main // package clause should always be the first code
 import (
-	"fmt"   // import fmt
-	f "fmt" // import fmt as f > f.Print
+	"fmt" // import fmt
+	f "fmt"
+
+	"github.com/inancgumus/learngo/first/printer" // import fmt as f > f.Print
 )
 
 /*
@@ -15,4 +17,6 @@ func main() {
 	fmt.Println("Gogogogogo, it's a go!")
 	f.Println("Gogogogogo, it's a go!")
 	yolo()
+	printer.Hello()
+
 }
