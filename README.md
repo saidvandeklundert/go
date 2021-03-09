@@ -16,6 +16,7 @@ go build .\00_start\main.go
 
 ! Comile the code AND run it:
 go run main.go
+go run *.go
 ```
 
 Making it portable:
@@ -38,4 +39,23 @@ go env GOPATH
 ```
 
 
-fmt
+Packages:
+- all files that belong to a package should be in the same directory
+- all files in a folder should belong to the same package
+
+There are 2 type of packages in Go:
+- Executable packages ( executable, not importable)
+- Library packages: (not executable, importable)
+
+Executable packages should always contain a function called main.
+
+Scopes:
+- function defined in the main package are usable throughout
+- imported packages are visbile in that file only
+
+A statement instructs Go to do something. 
+An expression produces a value.
+An operator can combine expressions.
+
+Importing
+Create library

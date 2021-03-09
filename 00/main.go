@@ -1,10 +1,18 @@
 package main // package clause should always be the first code
 import (
-	"fmt"
+	"fmt"   // import fmt
+	f "fmt" // import fmt as f > f.Print
 )
 
+/*
+
+Multiline commenting.
+
+*/
 func main() {
 	fmt.Println("Said van de Klundert trying on some go.")
 	fmt.Println("Gogogogogo, it's a go!", "gogogo")
-	fmt.Print("Gogogogogo, it's a go!")
+	fmt.Println("Gogogogogo, it's a go!")
+	f.Println("Gogogogogo, it's a go!")
+	yolo()
 }
