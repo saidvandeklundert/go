@@ -3,7 +3,7 @@ import (
 	"fmt" // import fmt
 	f "fmt"
 
-	"github.com/inancgumus/learngo/first/printer" // import fmt as f > f.Print
+	"github.com/saidvandeklundert/go/printstuff" // import fmt as f > f.Print
 )
 
 /*
@@ -17,6 +17,6 @@ func main() {
 	fmt.Println("Gogogogogo, it's a go!")
 	f.Println("Gogogogogo, it's a go!")
 	yolo()
-	printer.Hello()
+	printstuff.PritStuff()
 
 }
