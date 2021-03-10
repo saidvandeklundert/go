@@ -10,3 +10,7 @@ func yolo() {
 	fmt.Println("I have this many CPU:")
 	fmt.Println(runtime.NumCPU())
 }
+
+func version() string {
+	return runtime.Version()
+}

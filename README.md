@@ -14,9 +14,12 @@ Running a Go program:
 go build .\00_start\main.go         
 .\main.exe
 
-! Comile the code AND run it:
+! Compile the code AND run it:
 go run main.go
 go run *.go
+
+! Run all files in current directory (open terminal in your project and then):
+go run . 
 ```
 
 Making it portable:
@@ -57,5 +60,19 @@ A statement instructs Go to do something.
 An expression produces a value.
 An operator can combine expressions.
 
-Importing
-Create library
+Importing:
+
+Create library:
+
+Basic data types:
+
+`int`: integer literals without a fractional part( -2 0 88 )
+`float64`: integer literals wit a fractional part (-1.7 0. 88.8)
+`bool`: pre-declared constants (true, false)
+`string`: utf-8 1-4 bytes 
+
+Declarations:
+
+Assignments:
+
+Type conversion:
