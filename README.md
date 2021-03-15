@@ -320,6 +320,10 @@ A composite reference data type in go.
 
 Go is a pass by value language. Inputs to a function are local to that function.
 
+Functions are first-class citizens in Go.
+
+A function can be passed as an argument to another function.
+
 ```go
 func name() {
 	// function body, the code goes here
@@ -377,14 +381,18 @@ fmt.Printf("mapping: %#v\n", mapping)		// mapping: map[string]string{"b":"b"}
 
 There is a pointer type for every type.
 
+It is possible to pass a pointer to a function. Could be used in case you want to have a function change the value of a non-reference type outside a function.
+
 ```go
+// the '*' (indirection operator) returns the value of the pointer
+// the '&' (address operator) returns the pointer to a value
 
 // Declare integer type pointer:
 var PointerInteger *int
 
 // Declare integer, integer pointer and then print the values:
 var integer int = 100
-integerPointer := &integer
+integerPointer := &integer			// & is used to assign the address of the integer to the pointer
 fmt.Printf(`
 Pointer memory addres:         %-13p\n
 Address of the pointer itself: %-13p\n
@@ -455,6 +463,10 @@ bb := 3
 cc := 3.14
 dd := false
 // short declaration operator sometimes referred to as 'productivity operator'
+// Does inference. Productivity operator can be used inside a function only
+
+// assign a pre-declared variable
+a = "string"
 
 // defining a literal means defining a var together with all the values:
 var someString string = "word"
