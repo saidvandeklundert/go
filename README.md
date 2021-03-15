@@ -55,12 +55,21 @@ Complex numbers:
 What is `string internals`: Byte slices, ASCII & Unicode encoding and decoding.
 
 
-#### in short:
+#### summary:
+
+Aggregation types:
 `arrays`: collection of elements that are indexable.
-`slices`: collection of elements that are indexable. Has a dynamic length.
-`maps`: collection of indexable key-value pairs.
 `structs`: groups different (related) types
 
+Reference types:
+`slices`: collection of elements that are indexable. Has a dynamic length.
+`maps`: collection of indexable key-value pairs.
+`channels`:
+`pointers`: stores the memory address of a value
+`functions`: reusabe and organized block of code that performs an action
+
+Interface:
+`?`
 
 #### arrays:
 
@@ -303,3 +312,92 @@ fmt.Printf("struct: %#v\n", container.Packages.packages[1])
 fmt.Printf("struct: %#v\n", container.packages[1])
 ```
 
+#### functions:
+
+A composite reference data type in go.
+
+Go is a pass by value language. Inputs to a function are local to that function.
+
+```go
+func name() {
+	// function body, the code goes here
+	fmt.Printf("Running the function.")
+}
+
+// a, b are integer input arguments, c is declared as integer output:
+func multiply(a, b int)(c int) {	
+	c = a * b
+	return c
+}
+
+// since c is a named result value, the return will implicitly return c: 
+func multiply(a, b int)(c int) {	
+	c = a * b
+	return
+}
+
+
+// print the function or store the result in a var:
+fmt.Println(multiply(2, 6))
+c = multiply(2, 6)
+
+// Mind Go's pass by value, important when dealing with functions that change aggregate values.
+// Here is a struct:
+type SomeStruct struct {
+	Name string
+}
+// Func that changes struct:
+func changeSomeStruct(s SomeStruct) SomeStruct {
+	s.Name = "new_name"
+	return s
+}
+// Define struct, print it to screen, change it and print it to screen again:
+s := SomeStruct{Name: "name"}
+fmt.Printf("struct: %#v\n", s.Name) 	// struct: "name"
+s = changeSomeStruct(s)					// pass the struct (s) value and re-assign it to s
+fmt.Printf("struct: %#v\n", s.Name)		// struct: "new_name"
+
+
+// Now the same with a map (map is reference type):
+func changeMapping(m map[string]string) {
+	delete(m, "a")
+	return
+}
+mapping := map[string]string{"a": "a", "b": "b"}
+fmt.Printf("mapping: %#v\n", mapping)		//mapping: map[string]string{"a":"a", "b":"b"}
+changeMapping(mapping)
+fmt.Printf("mapping: %#v\n", mapping)		// mapping: map[string]string{"b":"b"}
+
+```
+
+
+#### pointers:
+
+There is a pointer type for every type.
+
+```go
+var someString string = "word"
+/*
+	- create a pointer variable
+	- assign the memory address of someBytes to it
+	- the '&' (address operator) returns the pointer to a value
+*/
+pointer := &someString
+fmt.Printf("%v\n", pointer) // 0xc000104230 (example memeroy address)
+fmt.Printf("%T\n", pointer) //*string
+/*
+	- provide the value that a memory address refers to
+	- the '*' (indirection operator) returns the value of the pointer
+*/
+value := *pointer
+fmt.Printf("%v\n", value) // word
+fmt.Printf("%T\n", value) // string
+/*
+	- update the value directly through the pointer
+*/
+*pointer = "WORD"
+new_value := *pointer
+fmt.Printf("%v\n", pointer)
+fmt.Printf("%v\n", new_value) // word
+	
+```
