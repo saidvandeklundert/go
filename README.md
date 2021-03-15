@@ -239,7 +239,9 @@ type NetworkDevice struct {
 	OperationSystem string
 	OsVersion       string
 }
-// Define instance of a struct:
+// Declare a variable of the type NetworkDevice and set to 0 value:
+var R1 NetworkDevice
+// Define instance of a struct literal:
 R1 := NetworkDevice{
 	Name:            "R1",
 	OperationSystem: "junos",
@@ -376,12 +378,38 @@ fmt.Printf("mapping: %#v\n", mapping)		// mapping: map[string]string{"b":"b"}
 There is a pointer type for every type.
 
 ```go
-var someString string = "word"
+
+// Declare integer type pointer:
+var PointerInteger *int
+
+// Declare integer, integer pointer and then print the values:
+var integer int = 100
+integerPointer := &integer
+fmt.Printf(`
+Pointer memory addres:         %-13p\n
+Address of the pointer itself: %-13p\n
+Pointer value:                 %-13d\n
+`, integerPointer, &integerPointer, *integerPointer)
+
+/* ^ gives the following:
+Pointer memory addres:         0xc000012088 
+Address of the pointer itself: 0xc000006030 
+Pointer value:                 100
+*/
+var integer int = 100
+integerPointer := &integer
+fmt.Printf(`
+Pointer memory addres:         %v
+Address of the pointer itself: %v
+Pointer value:                 %v
+`, integerPointer, &integerPointer, *integerPointer)
+}
 /*
 	- create a pointer variable
 	- assign the memory address of someBytes to it
 	- the '&' (address operator) returns the pointer to a value
 */
+var someString string = "word"
 pointer := &someString
 fmt.Printf("%v\n", pointer) // 0xc000104230 (example memeroy address)
 fmt.Printf("%T\n", pointer) //*string
@@ -401,3 +429,42 @@ fmt.Printf("%v\n", pointer)
 fmt.Printf("%v\n", new_value) // word
 	
 ```
+
+
+## Go syntax
+
+### Variables
+
+Typing is everything in Go. Imagine the following:
+```
+00001010
+```
+
+What the above byte means in a Go program can only be understood if the type has been declared.
+
+```go
+// Delare variables and set them to their 0 value:
+var a string
+var b int
+var c float64
+var d bool
+
+// Declare and initialize variables with short declaration operator:
+aa := "string"
+bb := 3
+cc := 3.14
+dd := false
+// short declaration operator sometimes referred to as 'productivity operator'
+
+// defining a literal means defining a var together with all the values:
+var someString string = "word"
+
+// anonymous, or nameless, definition:
+```
+
+
+
+
+##
+
+"Make it correct, make it clear, make it concise, make it fast. In that order" - Wes Dyer
