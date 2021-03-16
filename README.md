@@ -501,9 +501,11 @@ code/text: 		stores instructions
 
 stack, static and code memory does not grow.
 
-Stack is divided into frames. Function calles are alloted their own frame.
+Stack is divided into frames. Function calls are alloted their own frame.
 
 If more memory then what is available to the stack is required, the program crashes in a stack overflow.
+
+Memory in the heap is controlled by the developper. It can be requested and released.
 
 ##
 
