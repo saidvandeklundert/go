@@ -1,5 +1,22 @@
 # go
 
+Basic types:
+  - `String types`
+  - `Numeric types`
+  - `Boolean types`
+
+Composite tupes:
+- Aggregation types:
+  - `arrays`
+  - `structs`
+- Reference types:
+  - `slices`
+  - `maps`
+  - `channels`
+  - `pointers`
+  - `functions`
+- Interface:
+  - `?`
 
 ### Go types:
 
@@ -57,18 +74,18 @@ What is `string internals`: Byte slices, ASCII & Unicode encoding and decoding.
 
 #### summary:
 
-Aggregation types:
+**Aggregation types**:
 `arrays`: collection of elements that are indexable.
 `structs`: groups different (related) types
 
-Reference types:
+**Reference types**:
 `slices`: collection of elements that are indexable. Has a dynamic length.
 `maps`: collection of indexable key-value pairs.
 `channels`:
 `pointers`: stores the memory address of a value
 `functions`: reusabe and organized block of code that performs an action
 
-Interface:
+**Interface**:
 `?`
 
 #### arrays:
@@ -381,61 +398,53 @@ fmt.Printf("mapping: %#v\n", mapping)		// mapping: map[string]string{"b":"b"}
 
 There is a pointer type for every type.
 
-It is possible to pass a pointer to a function. Could be used in case you want to have a function change the value of a non-reference type outside a function.
+Go is `pass by value`. When a non-reference type is passed to a function, the function will not operate on that data. Instead, it will create a copy and use that copy inside the body of the function. This is giving a certain amount of isolation and immutability. 
+
+It is possible to pass a pointer to a function.This can be used in case you want to have a function change the value of a non-reference type outside the function.
 
 ```go
 // the '*' (indirection operator) returns the value of the pointer
 // the '&' (address operator) returns the pointer to a value
 
-// Declare integer type pointer:
+// Declare integer-type pointer:
 var PointerInteger *int
 
-// Declare integer, integer pointer and then print the values:
+// Declare integer, integer-pointer and then print the values:
 var integer int = 100
-integerPointer := &integer			// & is used to assign the address of the integer to the pointer
-fmt.Printf(`
-Pointer memory addres:         %-13p\n
-Address of the pointer itself: %-13p\n
-Pointer value:                 %-13d\n
-`, integerPointer, &integerPointer, *integerPointer)
-
-/* ^ gives the following:
-Pointer memory addres:         0xc000012088 
-Address of the pointer itself: 0xc000006030 
-Pointer value:                 100
-*/
-var integer int = 100
-integerPointer := &integer
+integerPointer := &integer		// & is used to assign the address of the integer to the pointer
 fmt.Printf(`
 Pointer memory addres:         %v
 Address of the pointer itself: %v
 Pointer value:                 %v
 `, integerPointer, &integerPointer, *integerPointer)
 }
-/*
-	- create a pointer variable
-	- assign the memory address of someBytes to it
-	- the '&' (address operator) returns the pointer to a value
+/* ^ gives the following:
+Pointer memory addres:         0xc0000ac058
+Address of the pointer itself: 0xc0000d8020
+Pointer value:                 100
 */
-var someString string = "word"
-pointer := &someString
-fmt.Printf("%v\n", pointer) // 0xc000104230 (example memeroy address)
-fmt.Printf("%T\n", pointer) //*string
+
+
 /*
-	- provide the value that a memory address refers to
-	- the '*' (indirection operator) returns the value of the pointer
-*/
-value := *pointer
-fmt.Printf("%v\n", value) // word
-fmt.Printf("%T\n", value) // string
-/*
-	- update the value directly through the pointer
-*/
-*pointer = "WORD"
-new_value := *pointer
-fmt.Printf("%v\n", pointer)
-fmt.Printf("%v\n", new_value) // word
-	
+- change someString by changing the pointer value
+- assign value to 'value' and 'new_value' by referencing the pointer
+*/  
+var someString string = "word"		// declare string-literal
+pointer := &someString				// declare string-pointer
+fmt.Printf("%v\n", pointer) 		// print var value:		 	0xc000088230
+fmt.Printf("%T\n", pointer) 		// print variable type:		*string
+value := *pointer					//
+fmt.Printf("%v\n", value) 			// print var value:			word
+fmt.Printf("%T\n", value) 			// print var type:			string  
+*pointer = "WORD"					// assign the value to memory address the pointer points to
+new_value := *pointer				// short-declare new_value to pointer value 
+fmt.Printf("%v\n", pointer)			// print var value:			0xc000088230
+fmt.Printf("%v\n", new_value)		// print var value:			WORD  
+fmt.Printf("%v\n", someString)		// print var value:			WORD  
+      
+    
+
+
 ```
 
 
@@ -471,11 +480,30 @@ a = "string"
 // defining a literal means defining a var together with all the values:
 var someString string = "word"
 
+// variable conversion
+n := 44
+f := float64(n)
+
 // anonymous, or nameless, definition:
 ```
 
 
+## Stack and heap
 
+[Understanding Allocations: the Stack and the Heap - GopherCon SG 2019](https://www.youtube.com/watch?v=ZMZpH4yT7M0)
+
+Notes from C (need to find good Go resources):
+
+heap:			variable in size, can be used as per need of developer
+stack:			function calls and local variables
+static/global: 	global variables
+code/text: 		stores instructions
+
+stack, static and code memory does not grow.
+
+Stack is divided into frames. Function calles are alloted their own frame.
+
+If more memory then what is available to the stack is required, the program crashes in a stack overflow.
 
 ##
 
