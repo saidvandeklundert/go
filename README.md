@@ -639,7 +639,7 @@ default:					// location of the default clause does not matter
 	fmt.Println("no match")
 }
 ```
-The case is like an `if` and the default is like an `else`.
+The case is like an `if` and the default is like an `else`. The first match is returned, so the case ordering matters. The exception is the location of the default clause. 
 
 You can test for multiple conditions:
 ```go
@@ -652,8 +652,56 @@ Go automatically converts switch conditions to `if` statements before running.
 
 If constants are used, go will not convert anything. The lookup will be faster.
 
+```go
+i := 9
+switch {
+case i > 100:
+	fmt.Println("Bigger then 100")
+case i < 10:
+	fmt.Println("Less then 10")
+	fallthrough						// ignore next case and execute that block also
+case i < 100:
+	fmt.Println("Less then 100")
+case i == 100:
+	fmt.Println("100")
+default:
+	fmt.Println("no match")
+}
+```
+
+Short switch:
+
+```go
+switch i := 9; true {		// short assignment of i and the switch condition (true is default)
+case i > 100:
+	fmt.Println("Bigger then 100")
+default:
+	fmt.Println("no match")
+}
+```
 
 ### loop
+
+
+
+Basic for loop:
+```go
+for i := 1; i <= 3; i++ {
+	fmt.Printf("word %v\n", i)
+}
+```
+init statement: `i := 1`, simple statement only run once
+condition: `i <= 3`, bool expression. The loop continues as long as this remains true.
+post statement: `i++`, run after each step of the loop
+
+Note: `i++` is the `IncDec` statement, increments the operand by the untyped constant 1.
+
+The result of the previous loop:
+```
+word 1
+word 2
+word 3
+```
 
 ## Error handling
 
