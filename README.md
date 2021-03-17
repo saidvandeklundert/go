@@ -703,6 +703,40 @@ word 2
 word 3
 ```
 
+```go
+// basic loop:
+for i := 1; i <= 3; i++ {
+	fmt.Printf("word %v\n", i)
+}
+// if i is already defined, it is not needed:
+for ; i <= 3; i++ {
+	fmt.Printf("word %v\n", i)
+}
+// IncDec can be moved into the loop:
+for ; i <= 3; {
+	fmt.Printf("word %v\n", i)
+	i++
+}
+// For statement with single condition:
+for i <= 3 {
+	fmt.Printf("word %v\n", i)
+	i++
+}
+// infinite loop:
+for {
+	fmt.Printf("word %v\n", i)
+	i++
+}
+// infinite loop:
+for {
+	if i > 3{
+		break			// break a loop
+	}
+	fmt.Printf("word %v\n", i)
+	i++
+}
+```
+
 ## Error handling
 
 `nil`: predeclared identifier. Could be read as 'not yet initialized'. It is like Python's `None`.
