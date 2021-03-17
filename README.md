@@ -583,6 +583,11 @@ if n < 100 {
 } else {
 	fmt.Printf("n >= 300")
 }
+
+// Test for multiple conditions:
+if word == "word" || word == "WORD"{
+	fmt.Printf("word or WORD")
+}
 ```
 
 Simple statement, aka short statement, can be used with an if statement.
@@ -630,11 +635,23 @@ case "word":
 	fmt.Println("word")
 case "WORD":
 	fmt.Println("WORD")
+default:					// location of the default clause does not matter
+	fmt.Println("no match")
 }
 ```
+The case is like an `if` and the default is like an `else`.
 
-Rules:
-- values in the case conditions should be unique
+You can test for multiple conditions:
+```go
+case "WORD", "WoRd":			// checked from left to right
+	fmt.Println("WORD or WoRd")
+```
+The values used for case conditions should be unique.
+
+Go automatically converts switch conditions to `if` statements before running.
+
+If constants are used, go will not convert anything. The lookup will be faster.
+
 
 ### loop
 
