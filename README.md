@@ -5,7 +5,7 @@ Basic types:
   - `Numeric types`
   - `Boolean types`
 
-Composite tupes:
+Composite types:
 - Aggregation types:
   - `arrays`
   - `structs`
@@ -15,10 +15,10 @@ Composite tupes:
   - `channels`
   - `pointers`
   - `functions`
-- Interface:
-  - `?`
+- Abstract type:
+  - `interface`
 
-### Go types:
+## Basic types:
 
 There are the following basic types in Go:
 - String types: set of string values.
@@ -67,7 +67,7 @@ Complex numbers:
 
 
 
-### Composite types
+## Composite types:
 
 What is `string internals`: Byte slices, ASCII & Unicode encoding and decoding.
 
@@ -85,8 +85,8 @@ What is `string internals`: Byte slices, ASCII & Unicode encoding and decoding.
 `pointers`: stores the memory address of a value
 `functions`: reusabe and organized block of code that performs an action
 
-**Interface**:
-`?`
+**Abstract types**:
+`interface`: collection of method signatures
 
 #### arrays:
 
@@ -440,14 +440,37 @@ fmt.Printf("%T\n", value) 			// print var type:			string
 new_value := *pointer				// short-declare new_value to pointer value 
 fmt.Printf("%v\n", pointer)			// print var value:			0xc000088230
 fmt.Printf("%v\n", new_value)		// print var value:			WORD  
-fmt.Printf("%v\n", someString)		// print var value:			WORD  
-      
-    
+fmt.Printf("%v\n", someString)		// print var value:			WORD   
 
 
 ```
+## Abstract types
 
+All types are concrete types, except the interface type.
+#### interfaces:
 
+Specifies a set of 1 or more method signatures. The interface is an abstract type, meaning you cannot create an instance of the interface. 
+
+You can create a variable that is an interface type and that has the methods that belong to the interface. This makes the method a custom type as well as a collection of methods.
+
+A method belongs to a type, a function belongs to a package.
+
+A method is defined as a function with a reciever argument.
+
+It is possible to attach a method to almost any type (even functions!):
+- can use pointer and receiver values:
+  - int
+  - array
+  - string
+  - struct
+  - float64
+- use receiver values:
+  - slice
+  - map
+  - func
+  - chan
+
+'The bigger the interface, the weaker the abstraction' - Rob Pike.
 ## Go syntax
 
 ### Variables
@@ -487,6 +510,198 @@ f := float64(n)
 // anonymous, or nameless, definition:
 ```
 
+## Operators
+
+### Comparison operators:
+
+Logical operators combine bool expressions and yield a bool value.
+
+```go
+// Logical AND operator:
+true && true				// true: when all operands are true
+
+// Logical OR operator:
+false || false				// false: one must be True for the expression to be True
+
+// Logical NOT operator:
+// If the expression is True, it returns False. If the expression is False, it returns True:
+!false						// true
+!!false						// false
+```
+
+```go
+true == true		// true
+true != true		// false
+```
+
+If a value with a type is not assignable to a variable, then that value cannot be compared with it either.
+
+```go
+integer, float := 100, 10.0
+integer > float				// not possible!
+integer > int(float)		// true, possible since the float is converted
+```
+### Ordering operators:
+
+```go
+1 < 2		// true
+2 > 3		// false
+2 >= 2		// true
+3 <= 2		// false
+```
+
+## Flow control
+
+Options:
+- if statement
+- switch statement
+- loop statement
+
+### if
+
+Condition expressions can only be bool
+
+```go
+
+if true {...}	
+
+if true {	
+} else if true {
+} else if true {
+} else if true {
+} else if true {
+} else {	
+}
+// Example:
+var n int = 1000
+if n < 100 {
+	fmt.Printf("n is < 100")
+} else if n < 200 {
+	fmt.Printf("n is < 200")
+} else if n < 300 {
+	fmt.Printf("n is < 300")
+} else {
+	fmt.Printf("n >= 300")
+}
+```
+
+Simple statement, aka short statement, can be used with an if statement.
+
+```go
+// 'Normal':
+n, err := strconv.Atoi(os.Args[1])
+if err != nil {
+	//Handle the error
+	fmt.Println("Error", err)
+	return
+}
+fmt.Println("We traversed the happy path! Converted number:", n)
+// Simple statement:
+if n, err := strconv.Atoi(os.Args[1]); err == nil {
+	fmt.Println("We traversed the happy path! Converted number:", n)
+}
+// notice the separator ';', this syntax is required.
+// 'err == nil' > condition expression: so if the error is nill, execute what is in the body
+```
+
+Important consideration:
+
+- Variables declared in the simple statement are ONLY available inside the if statement (and it's branches).
+- beware of shadowing. Using `:=` you might unintentionaly re-declare a new variable instead of assigning a value to an existing one. Use `=` for the latter.
+
+Shadowing can be caught in VCcode. Add the following to the settings JSON:
+```
+    "go.lintOnSave": "package",
+    "go.vetOnSave": "package",
+    "go.vetFlags": [
+        "-all",
+        "-shadow"
+    ]
+```
+
+
+### switch
+
+
+```go
+var word = "word"
+switch word {
+case "word":
+	fmt.Println("word")
+case "WORD":
+	fmt.Println("WORD")
+}
+```
+
+Rules:
+- values in the case conditions should be unique
+
+### loop
+
+## Error handling
+
+`nil`: predeclared identifier. Could be read as 'not yet initialized'. It is like Python's `None`.
+
+All initialized values get a 0-value and for pointer-based types, the 0-value is `nil`.
+
+Typically, a function will return it's usual output and an error. If there is no error, the error value will be `nil`.
+
+Example:
+```go
+
+func main() {
+	// Convert arg to number:
+	n, err := strconv.Atoi(os.Args[1])
+	fmt.Println("Converted number:", n)
+	fmt.Println("Error", err)
+}
+```
+This will not fail: `go run . 100`:
+```
+Converted number: 100
+Error <nil>
+```
+
+We get a response and the error value is `nil`
+
+This waill fail, `go run . a`:
+```
+Converted number: 0
+Error strconv.Atoi: parsing "a": invalid syntax
+PS 
+```
+We get a zero-value returned and the error is not `nil`. We should handle this error and not use the rest of the returned result.
+
+The typical pattern would be:
+```go
+n, err := strconv.Atoi(os.Args[1])
+if err != nil {
+	//Handle the error
+	fmt.Println("Error", err)
+	return
+}
+fmt.Println("We traversed the happy path! Converted number:", n)
+```
+
+## Constants
+
+Constants only exist at compile time.
+
+Constants are declared like variables, but with the const keyword. You cannot use the `:=` syntax.
+
+Constants can be character, string, boolean, or numeric values.
+
+Untyped constants take the type from their context.
+
+```go
+// untyped constants
+const u_integer = 123
+const u_float = 1.2
+
+// typed constants
+const t_integer int = 123
+const t_float float64 = 1.2
+```
 
 ## Stack and heap
 
