@@ -30,6 +30,7 @@ There are the following basic types in Go:
 
 `string`: a read-only slice of immutable bytes. Strings are utf-8 encoded by default.
 
+In the context of strings, a `rune` is a unicode code point.
 
 #### Numeric types:
 
@@ -153,13 +154,22 @@ The slice header contains the pointer. If a slice is copied, the new value will 
 Example slice:
 
 ```go
-var nums []int	// empty slice, no length defined
-var nums [5]int	// array, length defined
+// An empty slice:
+var nums []int	
+// An array:
+var nums [5]int
+
+// The difference: the array has the length defined
 ```
 
 Very similar to arrays, but notice that the length is not defined at compile time. The lenght of the slice is not a part of it's type.
 
-Slices can only contain one type of element
+Slices can only contain one type of element.
+
+```go
+// slice literal:
+letters := []string{"a", "b", "c", "d"}
+```
 
 
 #### maps:
@@ -529,6 +539,7 @@ false || false				// false: one must be True for the expression to be True
 !!false						// false
 ```
 
+
 ```go
 true == true		// true
 true != true		// false
@@ -550,6 +561,29 @@ integer > int(float)		// true, possible since the float is converted
 3 <= 2		// false
 ```
 
+### Comparison operators:
+
+```go
+==	// equal to
+!=	// not equal to
+<	// less than
+<=	// less than or equal to
+>	// greater than
+>=	// greater than or equal to
+```
+
+Note: all values of basic types are comparable if they are of the same type.
+
+### Bitwise binary operators:
+
+```go
+&	// bitwise AND
+|	// bitwise OR
+^	// bitwise XOR
+&^	// bit clear (AND NOT)
+<<	// left shift
+>>	// right shift
+```
 ## Flow control
 
 Options:
@@ -728,13 +762,29 @@ for {
 	i++
 }
 // infinite loop:
+var i int
+i = 1
 for {
-	if i > 3{
-		break			// break a loop
+	if i > 3 {
+		fmt.Printf("Give me a break\n")
+		break // break a loop
 	}
 	fmt.Printf("word %v\n", i)
 	i++
 }
+/* ^ gives:
+word 1
+word 2
+word 3
+Give me a break
+*/
+
+// use continue to skip an iteration:
+if i%2 != 0 {
+	i++			
+	continue 
+}
+// Note 'i++', if the check is against i', we should not forget to increment it.
 ```
 
 ## Error handling
