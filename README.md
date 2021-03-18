@@ -834,22 +834,28 @@ fmt.Println("We traversed the happy path! Converted number:", n)
 
 ## Constants
 
-Constants only exist at compile time.
+Constants belong to compile time. 
 
-Constants are declared like variables, but with the const keyword. You cannot use the `:=` syntax.
+Constant values are immutable, you cannot change the value of a constant in runtime.
+
+Constants are declared like variables, but with the const keyword you cannot use the `:=` syntax. You must initialize a constant to a value.
 
 Constants can be character, string, boolean, or numeric values.
 
 Untyped constants take the type from their context.
 
 ```go
-// untyped constants
+// untyped constants / aka typeless constant
 const u_integer = 123
 const u_float = 1.2
 
 // typed constants
 const t_integer int = 123
 const t_float float64 = 1.2
+
+// expressions can be used when initializing constants:
+const second = 1
+const minute = 60 *s
 ```
 
 ## Stack and heap
@@ -874,3 +880,32 @@ Memory in the heap is controlled by the developper. It can be requested and rele
 ##
 
 "Make it correct, make it clear, make it concise, make it fast. In that order" - Wes Dyer
+
+
+# Golang repo
+
+Golang repo is found [here](https://github.com/golang/go).
+
+
+Go comes with a standard library:
+- [documentation](https://golang.org/pkg/)
+- [source](https://github.com/golang/go/tree/master/src)
+
+
+
+# Go to source and play from your editor
+
+Additional information on a function will appear when you hoover over it. Clicking on the info will offer the option to follow the link to the docs:
+![Go to source and play](https://github.com/saidvandeklundert/go/img/go_to_source_and_play_1.png)
+
+The docs offer a brief description of the function. Clicking on `Example` will reveal additional information:
+![Go to source and play](https://github.com/saidvandeklundert/go/img/go_to_source_and_play_2.png)
+
+The full information on the `Println` func looks like this:
+![Go to source and play](https://github.com/saidvandeklundert/go/img/go_to_source_and_play_3.png)
+
+There are three links here. First is the link to the source code, by clicking on the func name:
+![Go to source and play](https://github.com/saidvandeklundert/go/img/go_to_source_and_play_4.png)
+
+Additionally we have `Share` and `Run`. Run will run the code in the browser and share will take you to the [Go Playground](https://play.golang.org/):
+![Go to source and play](https://github.com/saidvandeklundert/go/img/go_to_source_and_play_5.png)
