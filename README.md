@@ -896,16 +896,16 @@ Go comes with a standard library:
 # Go to source and play from your editor
 
 Additional information on a function will appear when you hoover over it. Clicking on the info will offer the option to follow the link to the docs:
-![Go to source and play](https://github.com/saidvandeklundert/go/img/go_to_source_and_play_1.png)
+![Go to source and play](https://github.com/saidvandeklundert/go/blob/main/img/go_to_source_and_play_1.png)
 
 The docs offer a brief description of the function. Clicking on `Example` will reveal additional information:
-![Go to source and play](https://github.com/saidvandeklundert/go/img/go_to_source_and_play_2.png)
+![Go to source and play](https://github.com/saidvandeklundert/go/blob/main/img/go_to_source_and_play_2.png)
 
 The full information on the `Println` func looks like this:
-![Go to source and play](https://github.com/saidvandeklundert/go/img/go_to_source_and_play_3.png)
+![Go to source and play](https://github.com/saidvandeklundert/go/blob/main/img/go_to_source_and_play_3.png)
 
 There are three links here. First is the link to the source code, by clicking on the func name:
-![Go to source and play](https://github.com/saidvandeklundert/go/img/go_to_source_and_play_4.png)
+![Go to source and play](https://github.com/saidvandeklundert/go/blob/main/img/go_to_source_and_play_4.png)
 
 Additionally we have `Share` and `Run`. Run will run the code in the browser and share will take you to the [Go Playground](https://play.golang.org/):
-![Go to source and play](https://github.com/saidvandeklundert/go/img/go_to_source_and_play_5.png)
+![Go to source and play](https://github.com/saidvandeklundert/go/blob/main/img/go_to_source_and_play_5.png)
