@@ -357,7 +357,7 @@ fmt.Printf("struct: %#v\n", container.packages[1])
 
 A composite reference data type in go.
 
-Go is a pass by value language. Inputs to a function are local to that function.
+Go is a pass by value language. Non-reference types will be copied in case they are an argument to a function. WHen they are copied, they exist only in the scope of that function. In case you need to change the state of a non-reference value outside of the scope of a function, you will nneed to pass the pointer to that value.
 
 Functions are first-class citizens in Go.
 

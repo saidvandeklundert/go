@@ -59,6 +59,7 @@ bool_value pointer:          %v
 		"r2": "arista",
 		"r3": "cisco",
 	}
+
 	// Returning the memory address to screen using the & operator:
 	fmt.Printf(`
 array_value pointer            %v
@@ -66,6 +67,13 @@ human_value pointer:           %v
 slice_value pointer            %v
 dict_value pointer:            %v
 `, &array_value, &struct_value, &slice_value, &dict_value)
+
+	// Returning the memory address of a type inside a composite type:
+	fmt.Printf(`
+array_value pointer item 0:            %v
+slice_value pointer item 0:            %v
+struct pointer name value:             %v
+`, &array_value[0], &slice_value[0], &struct_value.name)
 
 	// Create pointer variable using &:
 	int_pointer := &int_value
