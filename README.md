@@ -149,7 +149,19 @@ servers := [...][2]string{
 
 An array cannot change it's size. A slice can change in runtime.
 
-The slice header contains the pointer. If a slice is copied, the new value will be allocated a new pointer.
+A slice is actually a slice header that contains 3 fields:
+- pointer
+- lentgh
+- capacity
+
+The slice used in go is defined [here](https://github.com/golang/go/blob/master/src/runtime/slice.go).
+
+![Go slice code](https://github.com/saidvandeklundert/go/blob/main/img/slice.png)
+
+These fields describe it's backing array. 
+If a slice is copied, the new value will be allocated a new pointer.
+
+When `append()` is used and the new elements do not fit in the curent backing array, Golang allocates a new backing array and copies current content over.
 
 Example slice:
 
@@ -406,15 +418,20 @@ fmt.Printf("mapping: %#v\n", mapping)		// mapping: map[string]string{"b":"b"}
 
 #### pointers:
 
-There is a pointer type for every type.
+Pointers store the memory address of a value. There is a pointer type for every type.
 
 Go is `pass by value`. When a non-reference type is passed to a function, the function will not operate on that data. Instead, it will create a copy and use that copy inside the body of the function. This is giving a certain amount of isolation and immutability. 
 
 It is possible to pass a pointer to a function.This can be used in case you want to have a function change the value of a non-reference type outside the function.
 
+`*` is known as the dereferencing operator. It is used to declare a pointer variable and to access the value stored in the address.
+
+`&` is known as the address operator. It generates a pointer to it's operand.
+
 ```go
 // the '*' (indirection operator) returns the value of the pointer
 // the '&' (address operator) returns the pointer to a value
+
 
 // Declare integer-type pointer:
 var PointerInteger *int
