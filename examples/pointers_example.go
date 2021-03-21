@@ -62,10 +62,10 @@ bool_value pointer:          %v
 
 	// Returning the memory address to screen using the & operator:
 	fmt.Printf(`
-array_value pointer            %v
-human_value pointer:           %v
-slice_value pointer            %v
-dict_value pointer:            %v
+array_value pointer            %p
+human_value pointer:           %p
+slice_value pointer            %p
+dict_value pointer:            %p
 `, &array_value, &struct_value, &slice_value, &dict_value)
 
 	// Returning the memory address of a type inside a composite type:
