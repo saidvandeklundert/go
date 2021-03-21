@@ -378,7 +378,7 @@ func multiply(a, b int)(c int) {
 // since c is a named result value, the return will implicitly return c: 
 func multiply(a, b int)(c int) {	
 	c = a * b
-	return
+	return					// aka naked return: returns the named return values
 }
 
 
