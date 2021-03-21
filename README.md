@@ -70,10 +70,8 @@ Complex numbers:
 
 ## Composite types:
 
-What is `string internals`: Byte slices, ASCII & Unicode encoding and decoding.
 
-
-#### summary:
+Summary:
 
 **Aggregation types**:
 `arrays`: collection of elements that are indexable.
@@ -155,6 +153,8 @@ A slice is actually a slice header that contains 3 fields:
 - capacity
 
 The slice used in go is defined [here](https://github.com/golang/go/blob/master/src/runtime/slice.go).
+
+Note that the slice header contains a pointer. When a slice is passed to a function, the slice header is copied and passed to the function. The backing array however is not copied. 
 
 ![Go slice code](https://github.com/saidvandeklundert/go/blob/main/img/slice.png)
 
