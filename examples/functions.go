@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 func main() {
 	fmt.Println("Some example functions.")
@@ -31,6 +34,23 @@ int_ptr:                       %v
 
 	// Illustrate naked return:
 	_ = echoReturnString(str_value)
+
+	// Illustrate function that uses an error:
+	var shortString = "yo"
+	var longString = "Hey what is up?"
+	newShortString, err := insertComma(shortString)
+	if err != nil {
+		fmt.Println("insertComma failed:", err)
+	} else {
+		fmt.Printf(newShortString)
+	}
+
+	newLongString, err := insertComma(longString)
+	if err != nil {
+		fmt.Println("newLongString failed:", err)
+	} else {
+		fmt.Printf(newLongString)
+	}
 
 }
 
@@ -69,4 +89,17 @@ func echoReturnString(s string) (str string) {
 	return
 	// Due to (str string) this is the same as return str
 
+}
+
+// Return an error:
+func insertComma(s string) (string, error) {
+	stringLength := len(s)
+	// if the string
+	if stringLength <= 3 {
+		return "", errors.New("string is too short")
+	}
+	//Change "Hey what is up?"
+	s = s[0:3] + "," + s[3:]
+	//To "Hey, what is up?"
+	return s, nil
 }
