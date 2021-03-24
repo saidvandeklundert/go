@@ -158,9 +158,9 @@ servers := [...][2]string{
 
 An array cannot change it's size. A slice can change in runtime.
 
-A slice is actually a slice header that contains 3 fields:
-- pointer
-- lentgh
+A slice is actually a slice header/structure that contains 3 fields:
+- pointer to a backing array
+- length
 - capacity
 
 The slice used in go is defined [here](https://github.com/golang/go/blob/master/src/runtime/slice.go).
