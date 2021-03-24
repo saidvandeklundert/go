@@ -18,6 +18,17 @@ Composite types:
 - Abstract type:
   - `interface`
 
+
+
+Value types:
+- `int`
+- `float`
+- `string`
+- `bool`
+- `structs`
+- `array`
+
+
 ## Basic types:
 
 There are the following basic types in Go:
