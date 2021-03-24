@@ -271,6 +271,9 @@ In OOP, that is inheritence with an "is a" relationship. In Go, there is no inhe
 | single element type        | different types of fields  |
 | Dynamic number of elements | fixed number of fields     |
 
+Since methods can be defined on types, a struct can 'equiped' with methods. To add a method to a struct, you need to create a function that takes the struct as a receiver. This is specified between the `func` keyword and the method name.
+
+
 ```go
 // Define struct / blueprint
 type NetworkDevice struct {
@@ -297,71 +300,45 @@ fmt.Println(R1.OsVersion)		// 16.R4
 // Change or assign an individual struct value:
 R1.Name = "Router1"
 fmt.Println(R1.Name)			// Router1
-
-// No need to assign values to all fields:
-R2 := NetworkDevice{
-	Name:            "R2",
-	OperationSystem: "eos",
-}
-fmt.Printf("%#v", R2)   // main.NetworkDevice{Name:"R2", OperationSystem:"eos", OsVersion:""}
-
-// Struct values are copied along with their fields:
-R3 := R2
-R3.Name = "R3" // This changes the name for R3 only
-
-// Structs are equal if all fields are equal
-R2 == R3		// false
-
-// unless you specifically compare fields
-R2.OperationSystem == R3.OperationSystem  // true
-
-//
-type Packages struct {
-	language string
-	packages []string
-}
-type Container struct {
-	Packages        Packages
-	Name            string
-	OperationSystem string
-	OsVersion       string
-}
-
-container := Container{
-	Packages:        Packages{language: "python3", packages: []string{"napalm", "fastapi", "netmiko"}},
-	Name:            "Golem",
-	OperationSystem: "CentOS",
-	OsVersion:       "7",
-}
-fmt.Printf("struct: %#v\n", container) // Gives the following:
-/*
-struct: main.Container{Packages:main.Packages{language:"python3", packages:[]string{"napalm", "fastapi", "netmiko"}}, Name:"Golem", OperationSystem:"CentOS", OsVersion:"7"} 
-*/
-//access item in a slice in a nested struct:
-fmt.Printf("struct: %#v\n", container.Packages.packages[1])
-
-// Embedding a struct with an anonomous field:
-type Container struct {
-	Packages        
-	Name            string
-	OperationSystem string
-	OsVersion       string
-}
-// An anonymous field gets the name from it's type:
-//accessing an item in a slice in nested struct defined as an anonymous field:
-fmt.Printf("struct: %#v\n", container.Packages.packages[1])
-fmt.Printf("struct: %#v\n", container.packages[1])
 ```
+More examples on working with structs [here](https://github.com/saidvandeklundert/go/blob/main/struct.md).
 
 #### functions:
 
 A composite reference data type in go.
 
-Go is a pass by value language. Non-reference types will be copied in case they are an argument to a function. WHen they are copied, they exist only in the scope of that function. In case you need to change the state of a non-reference value outside of the scope of a function, you will nneed to pass the pointer to that value.
+Go is a pass by value language. Non-reference types will be copied in memory when the are passed as a value to a function. This applies to receiver values as well as arguments.
+
+When these values are copied, they exist only in the scope of that function. In case you need to change the state of a non-reference value outside of the scope of a function, you will need to pass the pointer to that value.
 
 Functions are first-class citizens in Go.
 
 A function can be passed as an argument to another function.
+
+A method belongs to a type, a function belongs to a package. A method is defined as a function with a reciever argument. The receiver argument precedes the function name:
+```go
+func (r receiverType) name(s string, i int)(returnString string, returnInt int){
+	// We can now work with the receiver in this function
+	// the receiver will be of type receiverType
+	// we can work with the copy of that type like so: r.attribute
+}
+```
+
+In effect, this will allow you to run the function/method on the reciever type/object. 
+
+In Python, something similar would be creating a class and then running a method on an instantiated object of that class using `self`:
+```python
+>>> class MyClass:
+...     def name(self):
+...         return 'hello world'
+... 
+>>> 
+>>> instanceOfMyClass = MyClass()
+>>> instanceOfMyClass.name()
+'hello world'
+```
+
+Note that this would be similar, it is NOT the same.
 
 ```go
 func name() {
@@ -369,18 +346,17 @@ func name() {
 	fmt.Printf("Running the function.")
 }
 
-// a, b are integer input arguments, c is declared as integer output:
+//function with input and output:
 func multiply(a, b int)(c int) {	
 	c = a * b
 	return c
 }
 
-// since c is a named result value, the return will implicitly return c: 
+// since c is a named result value, it is returned implicitly: 
 func multiply(a, b int)(c int) {	
 	c = a * b
 	return					// aka naked return: returns the named return values
 }
-
 
 // print the function or store the result in a var:
 fmt.Println(multiply(2, 6))
@@ -414,6 +390,7 @@ changeMapping(mapping)
 fmt.Printf("mapping: %#v\n", mapping)		// mapping: map[string]string{"b":"b"}
 
 ```
+
 
 
 #### pointers:
@@ -473,16 +450,32 @@ fmt.Printf("%v\n", someString)		// print var value:			WORD
 ```
 ## Abstract types
 
-All types are concrete types, except the interface type.
+All types are concrete types, except the interface type. THe interface type is an abstract type. Unlike with a concrete type, we cannot directly use an interface type to create a value.
 #### interfaces:
 
 Specifies a set of 1 or more method signatures. The interface is an abstract type, meaning you cannot create an instance of the interface. 
 
 You can create a variable that is an interface type and that has the methods that belong to the interface. This makes the method a custom type as well as a collection of methods.
 
-A method belongs to a type, a function belongs to a package.
+Interfaces can be usefull in case a collection of methods do something that can be re-used for a variety of objects.
 
-A method is defined as a function with a reciever argument.
+An example could be in a game where there is an movement method for a knight. Now imagine here are 200+ other characters that also need to move left and right. Instead of copy-pasting the methods over and over again, we can define an interface with a set of methods that can be used by all characters
+
+Example steps to creating and using an interface:
+- define the structs that we want to allow use of the interface
+- define the functions for the structs
+- define the interface and mention the functions that are part of the interface
+- define the interface function that references the functions
+
+
+Interfaces are implicit. We do not manually define the correlation between the interface custom type and the other methods and functions.
+
+Interfaces can be seen as a contract to help manage types. The Go compiler will check all the values and the returns involved, but (obviously) will not check if the logic that is used is sound.
+
+
+Fun facts:
+- if the struct passed as a receiver is not used by the method, we can just pass the type
+- structs do not need to have any fields defined. A field-less struct can be used as placeholder for methods and interfaces
 
 It is possible to attach a method to almost any type (even functions!):
 - can use pointer and receiver values:

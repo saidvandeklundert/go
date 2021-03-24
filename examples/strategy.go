@@ -10,3 +10,8 @@
 */
 //
 package main
+
+type slicePrintStrategy interface {
+	FirstItem()
+	LastItem()
+}

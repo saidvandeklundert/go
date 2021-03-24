@@ -1,0 +1,1 @@
+Some exercises I made for myself bc that is how I learn best.
