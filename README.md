@@ -402,6 +402,7 @@ fmt.Printf("mapping: %#v\n", mapping)		// mapping: map[string]string{"b":"b"}
 
 ```
 
+A function literal in Go is similar to a lambda expression in Python.
 
 
 #### pointers:
@@ -412,9 +413,11 @@ Go is `pass by value`. When a non-reference type is passed to a function, the fu
 
 It is possible to pass a pointer to a function.This can be used in case you want to have a function change the value of a non-reference type outside the function.
 
-`*` is known as the dereferencing operator. It is used to declare a pointer variable and to access the value stored in the address.
+`*` is known as the dereferencing operator. It has two use-cases:
+- It is used to declare a pointer variable: `var PointerInteger *int` declares the pointer
+- Access the value stored in the address: `*integerPointer` returns the value that the address refers to
 
-`&` is known as the address operator. It generates a pointer to it's operand.
+`&` (think 'address of') is known as the address operator. It generates a pointer to it's operand.
 
 ```go
 // the '*' (indirection operator) returns the value of the pointer
@@ -457,8 +460,45 @@ fmt.Printf("%v\n", pointer)			// print var value:			0xc000088230
 fmt.Printf("%v\n", new_value)		// print var value:			WORD  
 fmt.Printf("%v\n", someString)		// print var value:			WORD   
 
-
 ```
+
+#### channels (and Go routines):
+
+
+Go scheduler is in charge of scheduling Go routines.
+
+Concurrency is not parallelism.
+
+Concurrency: multiple threads executing code.
+
+Parallelism: multiple threads executed at the exact same time (requires multiple CPUs).
+
+
+The `main routine` has child routines created by the `go` keyword.
+
+`goroutine`: thread managed by the Go runtime.
+`go`: keyword that spawns a new thread go routine.
+
+Channels in go facilitate communication between the different go routines. Channels also have a type.
+
+After a channel is created, and a go routine is started, you can use the channel to:
+- send data into the channel
+- recieve values in the channel
+
+Example on how to make a channel:
+```go
+c := make(chan string)
+```
+
+Example on starting go routines:
+
+```go
+for _, link := range links {
+	go touchLink(link, c)
+}
+```
+
+
 ## Abstract types
 
 All types are concrete types, except the interface type. THe interface type is an abstract type. Unlike with a concrete type, we cannot directly use an interface type to create a value.
@@ -759,6 +799,10 @@ word 3
 ```
 
 ```go
+// loop using range:
+for index, value := range l {
+	fmt.Println(index, value)
+}
 // basic loop:
 for i := 1; i <= 3; i++ {
 	fmt.Printf("word %v\n", i)
@@ -853,6 +897,19 @@ if err != nil {
 fmt.Println("We traversed the happy path! Converted number:", n)
 ```
 
+## Other
+
+`defer`: a statement that defers execution of a function until the surrounding function returns.
+
+From Golang tour:
+```go
+func main() {
+	defer fmt.Println("world")
+
+	fmt.Println("hello")
+}
+```
+
 ## Constants
 
 Constants belong to compile time. 
@@ -930,3 +987,9 @@ There are three links here. First is the link to the source code, by clicking on
 
 Additionally we have `Share` and `Run`. Run will run the code in the browser and share will take you to the [Go Playground](https://play.golang.org/):
 ![Go to source and play](https://github.com/saidvandeklundert/go/blob/main/img/go_to_source_and_play_5.png)
+
+
+
+# links:
+
+['pointers'](https://youtu.be/sTFJtxJXkaY)
