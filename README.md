@@ -577,6 +577,7 @@ aa := "string"
 bb := 3
 cc := 3.14
 dd := false
+
 // short declaration operator sometimes referred to as 'productivity operator'
 // Does inference. Productivity operator can be used inside a function only
 

@@ -5,40 +5,23 @@ func main() {
 	//
 	// Define a string, an integer and a float64
 
-	/*fmt.Printf(`
-	%T is %v
-	%T is %v
-	%T is %v
-	`,
-			String, String, Int, Int, Float, Float)
-	*/
+	//fmt.Printf("%T is %v\n%T is %v\n%T is %v\n",String, String, Int, Int, Float, Float)
+
 	// Short declare a new string and re-assign the value of the previous string:
 
-	//fmt.Printf(`%v is %v`, NewString, String)
+	//fmt.Printf("%v\n%v", NewString, String)
 	// Reference types:
 	// Define a slice containing "a", "b", "c"
 
 	// Define a map that maps a, b, and c to 1,2 and 3.
 
-	/*fmt.Printf(`
-	%T is %v
-	%T is %v
-	`, Slice, Slice, Map, Map)/*
-		// Create a pointer to the integer 'intPointer':
-
-
-		/*fmt.Printf(`
-	intPointer is a %T
-
-	The memory address of the pointer is %v
-	The memory address of the value is %v
-	The value is %v
-
-	`, intPointer, &intPointer, intPointer, *intPointer)*/
+	//fmt.Printf("%T is %v\n%T is %v\n", Slice, Slice, Map, Map)
+	// Create a pointer named 'intPointer' to the integer named Int:
+	//fmt.Printf("intPointer is a %T\nThe memory address of the pointer is %v\nThe memory address of the value is %v\nThe value is %v", intPointer, &intPointer, intPointer, *intPointer)
 
 	// Change the value of the pointer through the pointer:
 
-	// Assign the new value to a new variable and print it:
+	// Assign the new value to a new variable called 'NewValue' and print it:
 
 	//fmt.Println(NewValue, Int)
 
