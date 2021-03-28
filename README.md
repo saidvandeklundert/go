@@ -148,7 +148,7 @@ var arrayStrings = [5]string{
 for index, word := range arrayStrings {
 	fmt.Println(index, word)
 }
-//ellipsis sets the array length based on the items assigned to it
+// elipsis sets the array length based on the items assigned to it
 var arrayStrings = [...]string{"Iterating", "an", "array",}
 for index, word := range arrayStrings {
 	fmt.Println(index, word)
