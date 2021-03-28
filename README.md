@@ -1,6 +1,6 @@
 # go
 
-![Go types overview](https://github.com/saidvandeklundert/go/blob/main/img/go_types_.png)
+![Go types overview](https://github.com/saidvandeklundert/go/blob/main/img/go_types.png)
 Basic types:
   - `String types`
   - `Numeric types`
