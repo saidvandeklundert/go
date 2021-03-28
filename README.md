@@ -39,14 +39,17 @@ There are the following basic types in Go:
 
 Defining basic types:
 ```go
+// Declare string with it's 0 value
+var a string
+
 // Declare string variable with value 'word'
 var Word string "word"				
 
-// Short declare new string variable, have Go infer the type
-AnotherWord := "another word"		// := can only initialize values!
-
 // Re-assign a value to the Word variable
 Word = "new word"					
+
+// Short declare new string variable, have Go infer the type
+AnotherWord := "another word"		// := can only initialize values!
 ```
 
 
