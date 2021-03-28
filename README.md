@@ -34,7 +34,19 @@ Value types:
 There are the following basic types in Go:
 - String types: set of string values.
 - Numeric types: integers, floats, bytes and runes.
-- Boolean types
+- Boolean types: true and false.
+
+Defining basic types:
+```go
+// Declare string variable with value 'word'
+var Word string "word"				
+
+// Short declare new string variable, have Go infer the type
+AnotherWord := "another word"		// := can only initialize values!
+
+// Re-assign a value to the Word variable
+Word = "new word"					
+```
 
 
 #### String types:
