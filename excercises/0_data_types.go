@@ -3,9 +3,9 @@ package main
 func main() {
 	// Basic types
 	//
-	// Define a string, an integer and a float64
+	// Define a string (String), an integer (Int) a float64 (Float) and a bool(Bool):
 
-	//fmt.Printf("%T is %v\n%T is %v\n%T is %v\n",String, String, Int, Int, Float, Float)
+	// fmt.Printf("%T is %v\n%T is %v\n%T is %v\n%T is %v\n", String, String, Int, Int, Float, Float, Bool, Bool)
 
 	// Short declare a new string and re-assign the value of the previous string:
 

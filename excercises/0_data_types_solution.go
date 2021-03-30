@@ -5,16 +5,13 @@ import "fmt"
 func main() {
 	// Basic types
 	//
-	// Define a string, an integer and a float64
+	// Define a string (String), an integer (Int) a float64 (Float) and a bool(Bool):
 	String := "string"
 	Int := 10
 	Float := 15.5
-	fmt.Printf(`
-%T is %v
-%T is %v
-%T is %v
-`,
-		String, String, Int, Int, Float, Float)
+	Bool := false
+
+	fmt.Printf("%T is %v\n%T is %v\n%T is %v\n%T is %v\n", String, String, Int, Int, Float, Float, Bool, Bool)
 
 	// Reference types:
 	// Define a slice containing "a", "b", "c"

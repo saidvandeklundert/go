@@ -221,60 +221,28 @@ A map variable is a pointer to a map header value in memory. The map header trac
 
 When you pass a map value to something (a function for instance), you are only passing the pointer.
 
-```go
-// declare map
-var dict map[string]string
+When you define a map, you also define a type for the key and a type for the value. Once the type is defined, you are stuck using those types. There is no mixing after this.
 
-// declare map using make
-var dict = make(map[string]string)
+oming from Python, I have always considered the dict as an extremely flexible composite type that can be used to store or represent (almost) any value. Don't let the fact that a map is a key/value in Go fool you. Even though the map type in Go is also a key/value pair, it is a lot less flexible. In case you need a data structure that offers flexibility and that can store many different other types, struct would be a better choice.
 
-// initialize map	
-dict := map[string]string{
-	"r1": "juniper",
-	"r2": "arista",
-	"r3": "cisco",
-}
+## Struct versus Map:
 
-// print map values to screen
-fmt.Printf("%v\n", dict)
+Stuct:
+- values can be of different types
+- keys do not support indexing
+- value type
+- during compile time, all fields have to be known
+- can store many different properties
 
-// print Go-syntax representation to screen
-fmt.Printf("%#v\n", dict)
+Map:
+- all keys must be of the same type
+- all values must be of the same type
+- reference type
+- keys are indexed and we can iterate them
+- represent a collection of related properties
+- not all keys have to be known at compile time
 
-// Safely access key:
-if value, ok := dict["r4"]; ok {
-	fmt.Printf("The value is %v.\n", value)
-}
-
-// Safely access key and return message if it is not found:
-if value, ok := dict["r4"]; ok {
-	fmt.Printf("The value is %v.\n", value)
-} else {
-fmt.Println("Value not found.")
-}
-
-// Loop over key/values"
-for key, value := range dict {
-    fmt.Printf("%v %v\n", key, value)
-}
-// delete a key (safe when referencing non-existing keys)
-delete(dict, "r233")
-
-// copy dict
-var dict2 = make(map[string]string)
-for key, value := range dict {
-	dict2[key] = value
-}
-
-// remove the pointer from the var (does not destroy the map!)
-dict = nil
-// destroy the map
-for key := range dict {
-	delete(dict, key)
-}
-
-```
-
+Examples on working with maps [here](https://github.com/saidvandeklundert/go/blob/main/maps.md).
 
 #### structs:
 
