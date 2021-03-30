@@ -316,17 +316,11 @@ R1 := NetworkDevice{
 	OperationSystem: "junos",
 	OsVersion:       "16.R4",
 }
-// print Go-syntax representation of instance to screen
-fmt.Printf("struct: %#v\n", R1)
 
 // print individual struct values:
 fmt.Println(R1.Name)			// R1
-fmt.Println(R1.OperationSystem)	// junos
-fmt.Println(R1.OsVersion)		// 16.R4
-
 // Change or assign an individual struct value:
 R1.Name = "Router1"
-fmt.Println(R1.Name)			// Router1
 ```
 More examples on working with structs [here](https://github.com/saidvandeklundert/go/blob/main/struct.md).
 
@@ -434,6 +428,15 @@ It is possible to pass a pointer to a function.This can be used in case you want
 - Access the value stored in the address: `*integerPointer` returns the value that the address refers to
 
 `&` (think 'address of') is known as the address operator. It generates a pointer to it's operand.
+
+
+Another shorthand:
+- turn `address` into `value` with `*address`
+- turn `value` into `address` with `&value`
+
+And:
+- if `*` is used where you would declare a type, it is used to indicate we are working with a pointer
+- if `*` is used as an operator, it is used to work with the value that the pointer is referencing
 
 ```go
 // the '*' (indirection operator) returns the value of the pointer
@@ -926,6 +929,38 @@ func main() {
 	fmt.Println("hello")
 }
 ```
+
+## Testing in Go
+
+To make a new test, crate a file that ends with `_test.go`.
+
+Running all tests in a package, run the command `go test`.
+
+Example test for pakage main:
+
+```go
+package main
+func TestSlice(t *testing.T) {
+	if len(Slice) != 3 {
+		t.Errorf("Slice range expected 20, got %d", len(Slice))
+	}
+	if Slice[0] != "a" {
+		t.Errorf("First item should be 'a', got %s", Slice[0])
+	}
+}
+
+```
+
+
+When it passes:
+```
+ go test
+PASS
+ok      
+```
+
+Got tests doesn't do any cleanup. In case you are creating files or altering state in one way or another, you need to make sure to clean up after yourself.
+  
 
 ## Constants
 

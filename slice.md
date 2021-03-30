@@ -16,10 +16,15 @@ slice := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 len(slice)          // return lenght of the slice: 11
 cap(slice)          // return the size of the slice backing array
-// Copy a slice into newS:
-newS := make([]int, 11)             // Ensure slice is big enough
+// Copy a slice into newS, make sure the slice is big enough:
+newS := make([]int, 11); 
+copy(newS, slice)       // [0 1 2 3 4 5 6 7 8 9 10]            
+newS := make([]int, 2)
+copy(newS, slice)       // [0 1]
+newS := make([]int, 20)         
+copy(newS, slice)       // [0 1 2 3 4 5 6 7 8 9 10 0 0 0 0 0 0 0 0 0]  
 // copy(to, from), the 'to' value will be a new instance with a new pointer: 
-copy(newS, slice)                   // newS now contains all elements from slice
+
 
 // Slicing: slice[start(including):stop(not including)]
 slice[1]            // 1
