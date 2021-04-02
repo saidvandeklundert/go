@@ -42,5 +42,4 @@ func main() {
 	// Make the JSON pretty:
 	prettyJSON, _ := json.MarshalIndent(JSONdata, "", "\t")
 	fmt.Println(string(prettyJSON))
-
 }

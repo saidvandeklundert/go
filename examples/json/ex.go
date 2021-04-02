@@ -47,7 +47,6 @@ func main() {
 	}
 	// Print the struct:
 	fmt.Println(Example)
-	fmt.Printf("%#v", Example)
 	// Marshal the struct
 	Example_marshalled, _ := json.Marshal(Example) // also works with &Example
 	fmt.Printf("%T %v\n", Example_marshalled, Example_marshalled)

@@ -34,4 +34,7 @@ func main() {
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	_ = json.Unmarshal(byteValue, &JSONdata)
 	fmt.Println(JSONdata)
+	// Make the JSON pretty:
+	prettyJSON, _ := json.MarshalIndent(JSONdata, "", "\t")
+	fmt.Println(string(prettyJSON))
 }
