@@ -114,3 +114,35 @@ fmt.Println(R1.OsVersion)		// 16.R4
 R1.Name = "Router1"
 fmt.Println(R1.Name)			// Router1
 ```
+
+
+
+```go
+// Anonymous nested struct where Face is nested in Human:
+type Face struct {
+	EyeColor string
+	Eyes     int
+}
+
+type Human struct {
+	name string
+	Face		// Notice it is not Face Face
+}
+// We create Joe's Face:
+joesFace := Face{EyeColor: "brown", Eyes: 2}
+// After this, we create Joe:
+joe := Human{name: "Joe", Face: joesFace}
+
+// We can now access Joe's face properties directly:
+joe.name			// Joe
+joe.EyeColor		// brown
+// Accessing the Face struct is also allowed:
+joe.Face.EyeColor	// brown
+
+// The anonymous struct can be constructed inside the main struct as well:
+marie := Human{
+	name: "marie",
+	Face: Face{EyeColor: "blue", Eyes: 2},
+}
+marie.EyeColor		// blue
+```

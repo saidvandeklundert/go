@@ -84,3 +84,31 @@ go mod edit -replace=example.com/ssot=../ssot
 go mod tidy
 go run .
 ```
+
+
+
+## Quick install note:
+
+Install yum, download and install Go, set the env path and go:
+```
+yum install wget
+wget https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
+
+rm -rf /usr/local/go && tar -C /usr/local -xzf go1.16.3.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin
+go version
+go version go1.16.3 linux/amd64
+```
+
+
+
+## Linter:
+
+Get the linter:
+```
+go get -u github.com/golang/lint/golint
+```
+Run the linter:
+```
+golint ./..
+```
