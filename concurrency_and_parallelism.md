@@ -90,7 +90,9 @@ Context can be used to ensure spawned Go routines are halted. This to prevent le
 
 Channels offer a way to manage concurrent code. They allow us to pass values between goroutines.
 
-Channels block.
+Channels are blocking. This means that after you push a message onto a channel, the operation is blocking untill it is read.
+
+
 
 Example using channels:
 ```go

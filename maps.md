@@ -68,6 +68,16 @@ if value, ok := dict["a"]; ok {
 } else {
 fmt.Println("Value not found.")
 }
+
+// Merge map example for map[string]string:
+func mergeMaps(m1, m2 map[string]string) map[string]string {
+	for key := range m2 {
+		if _, ok := m1[key]; !ok {
+			m1[key] = m2[key]
+		}
+	}
+	return m1
+}
 ```
 
 
