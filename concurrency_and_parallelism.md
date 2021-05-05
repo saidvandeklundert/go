@@ -22,7 +22,30 @@ In the context
 
 `Goroutine`:
 
-A goroutine has a simple model: it is a function executing concurrently with other goroutines in the same address space. It is lightweight, costing little more than the allocation of stack space. More [here](https://golang.org/doc/effective_go#goroutines).
+The Go scheduler manages the path of execution for Go routines and it does not rely on the OS to manage threads. Go uses 1 thread per processor and it can manage multiple Go routines inside a single thread.
+
+
+A goroutine has a simple model: it is a function executing concurrently with other goroutines in the same address space. It is lightweight, costing little more than the allocation of stack space. Additionally, context switching between go routines is also a lot more lightweight versus having the OS context switch threads. More [here](https://golang.org/doc/effective_go#goroutines).
+
+W. Kennedy's take: Go has turned IO-bound work into CPU-bound work because by running multiple Go routines in a single thread (from an OS pov), Go can keep the CPU busy all the time.
+
+W. Kennedy's take on 5 kids (from Go scheduler mechanics): "I just travel a lot, I get out of town."
+Goroutine vs threads:
+
+| Go routine  | thread  |
+|---|---|
+| Managed by the Go runtime   | Managed by kernal  |
+| Not hardware dependant   | hardware dependant  |
+| Easy communication through channels  | No easy communication between threads  |
+| Low latcency communication between channels | Latency involved in inter-thread communication  |
+| Go routine does not have an ID as it does not have thread local storage  | unique ID because they have thread local storage  |
+| Cheap | Expensive (less then processes, but still)  |
+| fast startup  | slow startup  |
+| growable segmented stacks | no growable segmented stacks |
+| cooperatively scheduled  | preemptively scheduled |
+
+
+
 
 A `go` statement starts the execution of a function call as an independant concurrent thread of control, or `goroutine`, within the same address space.
 

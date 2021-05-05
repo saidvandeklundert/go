@@ -6,6 +6,7 @@ Functions are first-class citizens in Go.
 
 ```go
 // Simple function:
+
 //function with input and output:
 func multiply(a, b int)(c int) {	
 	c = a * b
@@ -43,4 +44,16 @@ func RecEx(a, b int) (c int) {
 
 RecEx(2, 2)         // 128: returns RecEx 5 x before it is > then 100, then returns c
 RecEx(2, 100)       // 200: returns c immediately as it is > then 100
+
+
+
+// Function literal:
+func() {
+	fmt.Println("inside the unnamed func")
+}
+
+// EXECUTING a function literal:
+func() {
+	fmt.Println("inside the unnamed func")
+}() // <-()
 ```

@@ -153,26 +153,10 @@ var arrayStrings = [5]string{
 for index, word := range arrayStrings {
 	fmt.Println(index, word)
 }
-// elipsis sets the array length based on the items assigned to it
-var arrayStrings = [...]string{"Iterating", "an", "array",}
-for index, word := range arrayStrings {
-	fmt.Println(index, word)
-}
-fmt.Println(len(elipsisArrayStrings)) // 3
 
-// Arrays can be multidimensional:
-servers := [2][2]string{
-	[2]string{"container-1", "ubi"},
-	[2]string{"container-2", "centos"},
-}
-// Multidimensional arrays are better defined using the elipsis and declaring the type only once:
-servers := [...][2]string{
-	{"container-1", "ubi"},
-	{"container-2", "centos"},
-}
 ```
 
-
+More on arrays [here](https://github.com/saidvandeklundert/go/blob/main/array.md).
 #### slices:
 
 `slices`: collection of elements that are indexable. Has a dynamic length.
@@ -387,6 +371,7 @@ fmt.Printf("mapping: %#v\n", mapping)		// mapping: map[string]string{"b":"b"}
 
 A function literal in Go is similar to a lambda expression in Python.
 
+More on functions and methods [here](https://github.com/saidvandeklundert/go/blob/main/functions.md)
 
 #### pointers:
 
@@ -787,6 +772,9 @@ Memory in the heap is controlled by the developper. It can be requested and rele
 
 "Make it correct, make it clear, make it concise, make it fast. In that order" - Wes Dyer
 
+## Ardan labs gotraning repo:
+
+[Latency numbers every programmer should know](https://github.com/ardanlabs/gotraining/tree/master/topics/go/language/arrays#industry-defined-latencies)
 
 # Golang repo
 
