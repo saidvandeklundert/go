@@ -293,6 +293,11 @@ Functions are first-class citizens in Go.
 
 A function can be passed as an argument to another function.
 
+##### Methods
+
+```
+Methods give us this syntactic sugar that a piece of data has behavior. - William Kennedy
+```
 A method belongs to a type, a function belongs to a package. A method is defined as a function with a reciever argument. The receiver argument precedes the function name:
 ```go
 func (r receiverType) name(s string, i int)(returnString string, returnInt int){
@@ -303,6 +308,19 @@ func (r receiverType) name(s string, i int)(returnString string, returnInt int){
 ```
 
 In effect, this will allow you to run the function/method on the reciever type/object. 
+
+In Go, you could argue, there are three classes of types:
+- built-in ([numerics](https://golang.org/ref/spec#Numeric_types), string and bool)
+- reference types (slices, maps, channels, interface functions and channels)
+- user defined types (struct types)
+
+Tip from William Kennedy:
+- use value semantics when working with built-in types 
+- use value semantics when working with reference types 
+  - exception is when a slice or a map is passed down the call stack and to a function that is named decode or unmarshall
+- for your own structs, think about what is best suited. When in doubt, choose pointer semantics at first
+
+Try to be consistent in the semantic that you chose.
 
 In Python, something similar would be creating a class and then running a method on an instantiated object of that class using `self`:
 ```python
@@ -482,6 +500,8 @@ All types are concrete types, except the interface type. THe interface type is a
 #### interfaces:
 
 Specifies a set of 1 or more method signatures. The interface is an abstract type, meaning you cannot create an instance of the interface. 
+
+Interfaces define a behavior. Something like printing, running, writing etc.
 
 You can create a variable that is an interface type and that has the methods that belong to the interface. This makes the method a custom type as well as a collection of methods.
 
@@ -676,6 +696,32 @@ if err != nil {
 	return
 }
 fmt.Println("We traversed the happy path! Converted number:", n)
+```
+
+## Type switch
+
+```go
+func typeSwitch(i interface{}) {
+	switch v := i.(type) {
+	case int:
+		fmt.Printf("Integer value is %d\n", v)
+	case string:
+		fmt.Printf("String value is %s\n", v)
+	default:
+		fmt.Printf("No case statement for %T!\n", v)
+	}
+}
+
+func main() {
+	typeSwitch(21)
+	typeSwitch("hello")
+	typeSwitch(true)
+}
+/*
+	Integer value is 21
+	String value is hello
+	No case statement for bool!
+*/
 ```
 
 ## Other
