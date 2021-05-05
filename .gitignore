@@ -1,4 +1,5 @@
 # User Added
 *.exe
 IGNORED
+*.zmain.go
 zmain.go
