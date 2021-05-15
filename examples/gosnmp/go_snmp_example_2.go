@@ -19,10 +19,10 @@ func main() {
 
 	c := make(chan string)
 
-	for _, targetDev := range devices[1:24000] {
+	for _, targetDev := range devices {
 		go GetSnmpDevInfo(targetDev, snmpString, c)
 	}
-	for range devices[1:24000] {
+	for range devices {
 		result := <-c
 		fmt.Println(result)
 	}
