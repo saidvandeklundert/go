@@ -85,8 +85,8 @@ type SnmpStruct struct {
 }
 
 // Task implements the Worker interface (in this example for the SnmpStruct):
-func (s *SnmpStruct) Task() {
-	log.Println("Task()")
+func (s *SnmpStruct) Task(goID int) {
+	log.Println("Task bein run by GoID ", goID)
 	s.GetValues()
 	String := fmt.Sprintf("%s	%s", s.TargetHost, s.Hostname)
 	fmt.Println(String)
@@ -123,7 +123,7 @@ func (s *SnmpStruct) GetValues() {
 // The worker must be implemented by types that want to use the work pool
 
 type Worker interface {
-	Task()
+	Task(goID int)
 }
 
 // Pool provides a pool of goroutines that can execute any Worker
@@ -148,7 +148,7 @@ func New(maxGoroutines int) *Pool {
 			log.Println("Started worker with goID ", goID)
 			for w := range p.work {
 				log.Println("New job picked up by goID ", goID)
-				w.Task()
+				w.Task(goID)
 				log.Println("Existing number of Goroutines: ", runtime.NumGoroutine())
 			}
 			p.wg.Done()
