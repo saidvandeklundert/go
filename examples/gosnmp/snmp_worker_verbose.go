@@ -1,7 +1,7 @@
 /*
 	using gosnmp v1.32.0
 
-	Example where a worker pool is defined and used to collect information from a device.
+	Example where a worker pool is defined and used to collect information from devices.
 */
 package main
 

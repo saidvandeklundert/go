@@ -62,7 +62,9 @@ AnotherWord := "another word"		// := can only initialize values!
 
 `string`: a read-only slice of immutable bytes. Strings are utf-8 encoded by default.
 
-In the context of strings, a `rune` is a unicode code point.
+In the context of strings, a `rune` is a unicode code point. The `rune` is a alias for `int32`, which can represent a unicode code point. When referrring to characters, use `rune` to clarify intent.
+
+The zero value is an empty string.
 
 #### Numeric types:
 
@@ -94,11 +96,21 @@ Complex numbers:
  - `rune` == `int32`
 
 
+Idiomatic Go:
+- use `byte` instead of `uint8`
+- when choosing what integer to use, always use `int` unless:
+  - you are writing a library function
+  - you are working with a binary file format or networking protocol that has an integer of s specific size or sign
+
+
+Don't use a float unless you really need to. In case you need a float, choose `float64`.
+
+The zero value for an int is `0`.
 #### Boolean types:
 
 `bool`: pre-declared constant that can be true or false. (1 byte)
 
-
+The zero value for a bool is `false`.
 
 ## Composite types:
 
@@ -280,6 +292,52 @@ fmt.Println(R1.Name)			// R1
 R1.Name = "Router1"
 ```
 More examples on working with structs [here](https://github.com/saidvandeklundert/go/blob/main/struct.md).
+
+## Declaring variables
+
+The way you declare a variable communicates something on how the variable is being used.
+
+The most verbose way to declare a variable:
+```go
+var x string = "Go"
+```
+
+Declaring a variable and assigning the zero value:
+```go
+var x string
+```
+
+You can declare multiple variables at once with `var`:
+```go
+var x, y int = 1, 2
+```
+
+They can be mixed types:
+```go
+var x, y = 1, "Go"
+```
+
+You can also use a 'declaration' list:
+
+```go
+var (
+	x    int
+	y        = 2
+	z    int = 3
+	d, e     = 4, "Go"
+	f, g string
+)
+```
+
+Inside functions, you can/should use short-declaration that uses typ-inference:
+```go
+x := 10
+x, y := 10, "Go"		// you can assign values to multiple variables as well as re-assign values to existing ones
+```
+
+Idiomati Go is using short-declarion when possible unless you want to use a zero value of a type or when you need to make it explicit that you are creating and reassigning variables. In that case, use var to create new variables and then use the `=` to assign new values to to both old as well as new values.
+
+As a general rule, only declare package level variables (using var) in case neccessary and only create immutable package level variables.
 
 #### functions:
 
@@ -643,6 +701,7 @@ Note: all values of basic types are comparable if they are of the same type.
 <<	// left shift
 >>	// right shift
 ```
+
 ## Flow control
 
 For flow control, Go offers the following options:
@@ -771,15 +830,21 @@ Got tests doesn't do any cleanup. In case you are creating files or altering sta
 
 ## Constants
 
-Constants belong to compile time. 
+Constants belong to compile time. They can only hold values that the compiler can figure out at compile time.
 
-Constant values are immutable, you cannot change the value of a constant in runtime.
+Constant values are effectively immutable, you cannot change the value of a constant in runtime.
 
 Constants are declared like variables, but with the const keyword you cannot use the `:=` syntax. You must initialize a constant to a value.
 
-Constants can be character, string, boolean, or numeric values.
+Constants can be assigned the following values:
+- numeric literals
+- true and false
+- strings
+- runes
+- built-in functions `complex`, `real`, `imag`, `len` and `cap`
+- expressions that consist of operators and the preceding values
 
-Untyped constants take the type from their context.
+Untyped constants take the type from their context. Leaving a constant untyped will give you greater flexibility.
 
 ```go
 // untyped constants / aka typeless constant
@@ -792,7 +857,7 @@ const t_float float64 = 1.2
 
 // expressions can be used when initializing constants:
 const second = 1
-const minute = 60 *s
+const minute = 60 *second
 ```
 
 ## Stack and heap

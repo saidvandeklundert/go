@@ -1,28 +1,12 @@
-First major programming language ever built to take advantage of multiple cores. Concurrency is at the heart of the design of the Go programming language.
+### Goroutine:
 
-Go enables two styles of concurrent programming. CSP, or communicating sequential processes, is a model of concurrency in which values are passed between independant activities (goroutines) but variavles are for the most part confined to a single activity. Go routines and channels follow this CSP model.
+The Go runtime scheduler manages go routines. Go does not rely on the OS to manage threads. 
 
-Go scheduler is in charge of scheduling Go routines.
-
-Concurrency is not parallelism.
-
-Concurrency: multiple threads executing code.
-
-Parallelism: multiple threads executed at the exact same time (requires multiple CPUs).
-
-Important note: channels are blocking.
-
-Go concurrency slogan:
-
-```
-Do not communicate by sharing memory; instead, share memory by communicating.
-```
-
-In the context
-
-`Goroutine`:
-
-The Go scheduler manages the path of execution for Go routines and it does not rely on the OS to manage threads. Go uses 1 thread per processor and it can manage multiple Go routines inside a single thread.
+Go using it's own scheduler has some advantages:
+- Goroutines can be created faster then an OS can create threads
+- Goroutines require less memmory. They have a very small initial stack size that can grow as needed.
+- switching between Goroutines is faster then swtiching between threads
+- the Goroutine scheduler is able to optimize its decisions because it is part of the Go process
 
 
 A goroutine has a simple model: it is a function executing concurrently with other goroutines in the same address space. It is lightweight, costing little more than the allocation of stack space. Additionally, context switching between go routines is also a lot more lightweight versus having the OS context switch threads. More [here](https://golang.org/doc/effective_go#goroutines).
@@ -155,3 +139,22 @@ Receive channel:
 Send channel:
 - push values to the channel
 - cannot receive/pull or read from the channel
+
+
+
+
+Go scheduler is in charge of scheduling Go routines.
+
+Concurrency is not parallelism.
+
+Concurrency: multiple threads executing code.
+
+Parallelism: multiple threads executed at the exact same time (requires multiple CPUs).
+
+Important note: channels are blocking.
+
+Go concurrency slogan:
+
+```
+Do not communicate by sharing memory; instead, share memory by communicating.
+```
