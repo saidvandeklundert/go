@@ -117,10 +117,12 @@ The zero value for a bool is `false`.
 Summary:
 
 **Aggregation types**:
+
 `arrays`: collection of elements that are indexable.
 `structs`: groups different (related) types
 
 **Reference types**:
+
 `slices`: collection of elements that are indexable. Has a dynamic length.
 `maps`: collection of indexable key-value pairs.
 `channels`:
@@ -128,6 +130,7 @@ Summary:
 `functions`: reusabe and organized block of code that performs an action
 
 **Abstract types**:
+
 `interface`: collection of method signatures
 
 #### arrays:
