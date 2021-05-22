@@ -7,26 +7,31 @@ It is designed to stay on your stack. The slice is 24 bytes in size and has only
 - length
 - capacity
 
+Slices are not comparible. You can only compare a slice with `nil`, which is the slice's zero value.
+
 ```go
 // Various ways to create a slice:
 
-    // Zero value slice(nil):
+// Zero value slice (nil):
 var aSlice []string                 // aSlice == nil: true.
-    // Create zeroed array with 10 elements and return the slice for it:
+// Create an array with 10 elements holding the int zero value and return the slice for it:
 eSlice := make([]int, 10)           // len(eSlice): 10
-    // Slice literal:
+eSlice := make([]int, 10, 20)		// specify a length of 10 and a backing array of 20
+// Slice literal:
 bSlice := []bool{true, true, false}    
 
+var x = []int{1, 5: 4, 6, 10: 100, 15}
 
-// Slice of integers:
+// Slice literal:
 slice := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 len(slice)          // return lenght of the slice: 11
 cap(slice)          // return the size of the slice backing array
 
 // copy will copy the backing array as well.
-// Copy a slice into newS, make sure the slice is big enough:
-newS := make([]int, 11); 
+// The copy function copies as many values as it can from source to destination, limited by whichever slice's length is smaller.
+// Capacity is not relevant here.
+newS := make([]int, 11)
 copy(newS, slice)       // [0 1 2 3 4 5 6 7 8 9 10]            
 newS := make([]int, 2)
 copy(newS, slice)       // [0 1]
@@ -36,6 +41,7 @@ copy(newS, slice)       // [0 1 2 3 4 5 6 7 8 9 10 0 0 0 0 0 0 0 0 0]
 
 
 // Slicing: slice[start(including):stop(NOT including)]
+// example slice: [0 1 2 3 4 5 6 7 8 9 10 0 0 0 0 0 0 0 0 0]
 slice[1]            // 1
 slice[2:6]          // [2 3 4 5]
 slice[3:]           // [3 4 5 6 7 8 9 10]
@@ -84,5 +90,15 @@ text := string(byteSlice)
 fmt.Println("File content:", text)
 s := strings.Split(text, ",")        // strings.Split returns slice. s: []string
 
+// Multidimensional slice:
+var x [][]int
+
+// The following appends after the 2 zero values in the slice
+newS := make([]int, 2)
+newS = append(newS, 10)		// [ 0, 0, 10]
+
+// you can create a non-nill slice with capacity and 0 length:
+newS := make([]int, 0, 10)
+newS = append(newS, 10)		// [ 10 ]
 ```
 

@@ -60,11 +60,10 @@ AnotherWord := "another word"		// := can only initialize values!
 
 #### String types:
 
-`string`: a read-only slice of immutable bytes. Strings are utf-8 encoded by default.
+`string`: a read-only slice of immutable bytes. Strings are utf-8 encoded by default. The zero value is an empty string
 
-In the context of strings, a `rune` is a unicode code point. The `rune` is a alias for `int32`, which can represent a unicode code point. When referrring to characters, use `rune` to clarify intent.
 
-The zero value is an empty string.
+More on strings [here](https://github.com/saidvandeklundert/go/blob/main/atrings.md).
 
 #### Numeric types:
 
@@ -135,17 +134,22 @@ Summary:
 
 `arrays`: collection of elements that are indexable. 
 
-It has a fixed length and stores elements of the same type. Array properties include the type of elements stored and the lenght of the array. Since the lenght of the array is a property, it belongs to compile time.
+Mostly, you interface with the `array` through the `slice`.
+
+The `array` has a fixed length and stores elements of the same type. Array properties include the type of elements stored as well as the lenght of the array. Since the lenght of the array is a property, it belongs to compile time.
 
 When arrays are copied, the value of the array is copied along with it. The 
 
 Arrays populate conitguous memory locations.
 ```go
-// Array with 10 empty string elements
+// Array with 10 empty string elements, initiaized to their zero value
 var emptyArrayStr [10]string
 // Array with 10 empty integer elements
 var emptyArrayInt [10]int
-// Array with several strings and several empty string elements
+// Array literal
+var arrayStrings [3]string{"Go", "Go", "Go"}
+var arrayStrings [...]string{"Go", "Go", "Go"}  			// no need to specify length when using array-literal
+// Arraywith several strings and several empty string elements
 var arrayStrings [10]string{"Some", "values", "stored", "in", "the", "array"}
 // Shorthand assignment
 arrayStringsShort := [10]string{"Some", "values", "stored", "in", "the", "array"}
@@ -173,7 +177,7 @@ More on arrays [here](https://github.com/saidvandeklundert/go/blob/main/array.md
 
 `slices`: collection of elements that are indexable. Has a dynamic length.
 
-An array cannot change it's size. A slice can change in runtime.
+An array cannot change it's size. A slice can change in runtime. Additionally, unlike with an array, the length is not part of the slice's type.
 
 A slice is actually a slice header/structure that contains 3 fields:
 - pointer to a backing array
@@ -187,9 +191,14 @@ Note that the slice header contains a pointer. When a slice is passed to a funct
 ![Go slice code](https://github.com/saidvandeklundert/go/blob/main/img/slice.png)
 
 These fields describe it's backing array. 
+
 If a slice is copied, the new value will be allocated a new pointer.
 
 When `append()` is used and the new elements do not fit in the curent backing array, Golang allocates a new backing array and copies current content over.
+
+When you use `make` to declare the slice, you can specify the capacity for the slice. 
+
+Slices are not comparable, you can only compare a slice to it's zero value, which is `nil`.
 
 Example slice:
 
@@ -210,6 +219,10 @@ Slices can only contain one type of element.
 // slice literal:
 letters := []string{"a", "b", "c", "d"}
 ```
+
+When taking a slice of a slice, be midfull of the pitfalls involved. Both slices share the same memory and changes to one slice are reflected in the other slice. Do not modify slices after they have been sliced or if they were produced by slicing. Use a three-part slice expression to prevent append from sharing capacity between slices (`a[low : high : max]`).
+
+Even safer is making a copy of a slice using `copy`.
 
 
 #### maps:
@@ -335,10 +348,14 @@ x := 10
 x, y := 10, "Go"		// you can assign values to multiple variables as well as re-assign values to existing ones
 ```
 
-Idiomati Go is using short-declarion when possible unless you want to use a zero value of a type or when you need to make it explicit that you are creating and reassigning variables. In that case, use var to create new variables and then use the `=` to assign new values to to both old as well as new values.
+Idiomatic Go is using short-declarion when possible unless you want to use a zero value of a type or when you need to make it explicit that you are creating and reassigning variables. In that case, use var to create new variables and then use the `=` to assign new values to to both old as well as new values.
 
 As a general rule, only declare package level variables (using var) in case neccessary and only create immutable package level variables.
 
+
+By convention, naming variables is done using camel case (ex. `numTries`) when a variable consists of multiple words.
+
+The first letter indicates that it is a package level declaration. So unless something is a package level declaration, do not capitalize the first letter.
 #### functions:
 
 A composite reference data type in go.
@@ -860,6 +877,18 @@ const second = 1
 const minute = 60 *second
 ```
 
+## The Go runtime
+
+The Go runtime provides a number of services:
+- built-in types and functions (example, the `slice` and the `append` function)
+- networking
+- concurrency
+- garbage collection
+- memory allocation
+
+The Go runtime is compiled into every binary. This makes it easy to distribute Go programs and avoid worries over whether or not you will be able to run a program on a system after it was compiled.
+
+To clarify, because of the Go runtime, there is no need for a VM that runs the code (like in Java) and Go does not need to be installed on the system that executes the compiled program.
 ## Stack and heap
 
 [Understanding Allocations: the Stack and the Heap - GopherCon SG 2019](https://www.youtube.com/watch?v=ZMZpH4yT7M0)
