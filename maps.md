@@ -12,8 +12,12 @@ Capitols := map[string]string{
 fmt.Println(Capitols["Netherlands"])        // Amsterdam
 // Requested key doesn't exist so value type's zero value is returned:
 fmt.Println(Capitols["France"])             // ""
-// declare map with no values:
-var Dict map[string]string //map[]
+
+// declare nil map (writing to a nil map causes panic!!):
+var nilMap map[string]string 			// map[]
+
+// declaring an empty map literal is not the same as a nil map, you can write to it:
+emptyMap := map[string]string{}
 
 // declare map with no values using make:
 var dict = make(map[string]string) //map[]
@@ -25,6 +29,7 @@ dict["a"] = "a" // map[a:a]
 delete(dict, "a") // map[]
 delete(dict, "b") // safe to try and remove non-existing keys, does not crash the program
 fmt.Println(dict)
+
 // Iterating over a map:
 dict["a"] = "a"
 dict["c"] = "c"
@@ -35,6 +40,7 @@ for key, value := range dict {
 //a a
 //c c
 //b b
+
 // Dicts do not have the order guaranteed.
 // To guarantee the order, sort the dict first:
 keyList := make([]string, 0)
@@ -62,12 +68,15 @@ for key, value := range dict {
 	dict2[key] = value
 }
 
-// Safely access key and return message if it is not found:
-if value, ok := dict["a"]; ok {
-	fmt.Printf("The value is %v.\n", value)
+// Comma OK idiom:
+if v, ok := dict["a"]; ok {
+	fmt.Printf("The value is %v.\n", v)
 } else {
 fmt.Println("Value not found.")
 }
+// Or shorter:
+v, ok := dict["a"]		// a, true 
+v, ok := dict["z"]		// false 
 
 // Merge map example for map[string]string:
 func mergeMaps(m1, m2 map[string]string) map[string]string {
@@ -78,6 +87,15 @@ func mergeMaps(m1, m2 map[string]string) map[string]string {
 	}
 	return m1
 }
+
+// Go does not provide sets, but you can (ab)use a map as one:
+intSet := map[int]bool{}
+intSet[10] = true
+intSet[12] = true
+// bc you cannot have duplicate keys, this is in effect a set.
+// For union or other set operations, check non std lib packages.
+
+
 ```
 
 

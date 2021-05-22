@@ -227,7 +227,7 @@ Even safer is making a copy of a slice using `copy`.
 
 #### maps:
 
-`maps`: collection of indexable key-value pairs. The map is a hash-table. 
+`maps`: collection of indexable key-value pairs. The map is a hash-table and it's zero value is `nil`. 
 
 They `key` value can be any comparable, or phrased differently, any type that supports the equality operator.
 
@@ -237,9 +237,9 @@ When you pass a map value to something (a function for instance), you are only p
 
 When you define a map, you also define a type for the key and a type for the value. Once the type is defined, you are stuck using those types. There is no mixing after this.
 
-oming from Python, I have always considered the dict as an extremely flexible composite type that can be used to store or represent (almost) any value. Don't let the fact that a map is a key/value in Go fool you. Even though the map type in Go is also a key/value pair, it is a lot less flexible. In case you need a data structure that offers flexibility and that can store many different other types, struct would be a better choice.
+Coming from Python, I have always considered the dict as an extremely flexible composite type that can be used to store or represent (almost) any value. Don't let the fact that a map is a key/value in Go fool you. Even though the map type in Go is also a key/value pair, it is a lot less flexible. In case you need a data structure that offers flexibility and that can store many different other types, struct would be a better choice.
 
-## Struct versus Map:
+### Struct versus Map:
 
 Stuct:
 - values can be of different types
@@ -255,6 +255,15 @@ Map:
 - keys are indexed and we can iterate them
 - represent a collection of related properties
 - not all keys have to be known at compile time
+
+### Maps and slices
+
+Some similarities between maps and slices:
+- the zero value for a map is `nil`
+- you cannot compare maps
+- can use `len` on a map to check the number of k/v pairs in the map
+- maps automatically grow in size as you add k/v's
+
 
 Examples on working with maps [here](https://github.com/saidvandeklundert/go/blob/main/maps.md).
 
