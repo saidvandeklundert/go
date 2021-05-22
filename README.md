@@ -118,20 +118,20 @@ Summary:
 
 **Aggregation types**:
 
-`arrays`: collection of elements that are indexable.
-`structs`: groups different (related) types
+- `arrays`: collection of elements that are indexable.
+- `structs`: groups different (related) types
 
 **Reference types**:
 
-`slices`: collection of elements that are indexable. Has a dynamic length.
-`maps`: collection of indexable key-value pairs.
-`channels`:
-`pointers`: stores the memory address of a value
-`functions`: reusabe and organized block of code that performs an action
+- `slices`: collection of elements that are indexable. Has a dynamic length.
+- `maps`: collection of indexable key-value pairs.
+- `channels`:
+- `pointers`: stores the memory address of a value
+- `functions`: reusabe and organized block of code that performs an action
 
 **Abstract types**:
 
-`interface`: collection of method signatures
+- `interface`: collection of method signatures
 
 #### arrays:
 
