@@ -63,7 +63,7 @@ AnotherWord := "another word"		// := can only initialize values!
 `string`: a read-only slice of immutable bytes. Strings are utf-8 encoded by default. The zero value is an empty string
 
 
-More on strings [here](https://github.com/saidvandeklundert/go/blob/main/atrings.md).
+More on strings [here](https://github.com/saidvandeklundert/go/blob/main/strings.md).
 
 #### Numeric types:
 
