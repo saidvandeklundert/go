@@ -139,11 +139,11 @@ Summary:
 
 Mostly, you interface with the `array` through the `slice`.
 
-The `array` has a fixed length and stores elements of the same type. Array properties include the type of elements stored as well as the lenght of the array. Since the lenght of the array is a property, it belongs to compile time.
+The `array` has a fixed length and stores elements of the same type. Array properties include the type of elements stored as well as the lenght of the array. Since the length of the array is a property, it belongs to compile time.
 
 When arrays are copied, the value of the array is copied along with it. The 
 
-Arrays populate conitguous memory locations.
+Arrays populate contiguous memory locations.
 ```go
 // Array with 10 empty string elements, initiaized to their zero value
 var emptyArrayStr [10]string
@@ -274,13 +274,9 @@ Examples on working with maps [here](https://github.com/saidvandeklundert/go/blo
 
 `structs`: groups different (related) types
 
-Allows you to define a static blueprint. 
+The struct allows you to define a static blueprint. The field name and field types are defined at compile time. The field values belong to runtime and can change during program execution.
 
-The field name and field types are defined at compile time. 
-
-The field values belong to runtime and can change during program execution.
-
-Structs may store different types of data. 
+Structs may store different types of data. A zero value struct has every field set to the type's zero values
 
 Structs can contain structs as well.
 
@@ -295,27 +291,50 @@ In OOP, that is inheritence with an "is a" relationship. In Go, there is no inhe
 Since methods can be defined on types, a struct can 'equiped' with methods. To add a method to a struct, you need to create a function that takes the struct as a receiver. This is specified between the `func` keyword and the method name.
 
 
-```go
-// Define struct / blueprint
-type NetworkDevice struct {
-	Name            string
-	OperationSystem string
-	OsVersion       string
-}
-// Declare a variable of the type NetworkDevice and set to 0 value:
-var R1 NetworkDevice
-// Define instance of a struct literal:
-R1 := NetworkDevice{
-	Name:            "R1",
-	OperationSystem: "junos",
-	OsVersion:       "16.R4",
-}
 
-// print individual struct values:
-fmt.Println(R1.Name)			// R1
-// Change or assign an individual struct value:
-R1.Name = "Router1"
+```go
+type Person struct {
+	Name string
+	Age  int
+}
+var Jan Person		
+fmt.Println(Jan)		// { 0}
+marie := Person{
+	"marie",
+	2,
+}
+fmt.Println(marie)		// {marie 2}
+said := Person{
+	Name: "Said",
+	Age:  35,
+}
+fmt.Println(said)		// {Said 35}
+// Named struct instantiation can be done without specifying all fields.
+// Keys not specified will be set to their zero value:
+bobba := Person{
+	Name: "Bobba",
+}
+fmt.Println(bobba)		{Bobba 0}
 ```
+
+Other things too know about structs.
+
+Anonymous structs:
+
+An anonymous struct is like a normal struct, but defined without a name. For this reason, it can’t be referenced elsewhere in code.
+
+```go
+newGopher := struct {
+	name string
+	age  int
+}{
+	name: "Rob",
+	age:  200000,
+}
+fmt.Println(newGopher.name)		// Rob
+fmt.Println(newGopher.age)		// 200000
+```
+
 More examples on working with structs [here](https://github.com/saidvandeklundert/go/blob/main/struct.md).
 
 ## Declaring variables
@@ -901,6 +920,38 @@ The Go runtime provides a number of services:
 The Go runtime is compiled into every binary. This makes it easy to distribute Go programs and avoid worries over whether or not you will be able to run a program on a system after it was compiled.
 
 To clarify, because of the Go runtime, there is no need for a VM that runs the code (like in Java) and Go does not need to be installed on the system that executes the compiled program.
+
+## Blocks
+
+The following blocks can be identified in Go:
+1. universe block: all Go source text.
+2. package block: all Go source text for that package.
+3. file block: all Go source text in the file.
+4. Each "if", "for", and "switch" statement is considered to be in its own implicit block.
+5. Each clause in a "switch" or "select" statement acts as an implicit block.
+
+[Source](https://golang.org/ref/spec#Blocks).
+## Shadowing
+
+A variable is shadowing another variable when it overrides the variable in a more specific scope:
+
+```go
+x := 100
+if x > 50 {
+	fmt.Println(x)		
+	x := 1				// Shadowing x right here
+	fmt.Println(x)
+}
+fmt.Println(x)
+/*
+100
+1
+100
+*/
+```
+
+In the previous example, x was shadowed in the `if` block. The value assigned inside the block disappears after the block is executed.
+
 ## Stack and heap
 
 [Understanding Allocations: the Stack and the Heap - GopherCon SG 2019](https://www.youtube.com/watch?v=ZMZpH4yT7M0)

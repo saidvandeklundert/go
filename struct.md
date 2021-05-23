@@ -118,7 +118,7 @@ fmt.Println(R1.Name)			// Router1
 
 
 ```go
-// Anonymous nested struct where Face is nested in Human:
+// Embedded struct, where Face is embedded in Human:
 type Face struct {
 	EyeColor string
 	Eyes     int
