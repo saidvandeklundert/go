@@ -389,7 +389,7 @@ By convention, naming variables is done using camel case (ex. `numTries`) when a
 The first letter indicates that it is a package level declaration. So unless something is a package level declaration, do not capitalize the first letter.
 #### functions:
 
-A composite reference data type in go.
+A composite reference data type as well as a first class citizen in Go.
 
 Go is a pass by value language. Non-reference types will be copied in memory when the are passed as a value to a function. This applies to receiver values as well as arguments.
 
@@ -398,6 +398,8 @@ When these values are copied, they exist only in the scope of that function. In 
 Functions are first-class citizens in Go.
 
 A function can be passed as an argument to another function.
+
+More on functions [here](https://github.com/saidvandeklundert/go/blob/main/functions.md).
 
 ##### Methods
 
