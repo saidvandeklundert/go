@@ -290,13 +290,18 @@ In OOP, that is inheritence with an "is a" relationship. In Go, there is no inhe
 
 Since methods can be defined on types, a struct can 'equiped' with methods. To add a method to a struct, you need to create a function that takes the struct as a receiver. This is specified between the `func` keyword and the method name.
 
-
+Example of a simple struct:
 
 ```go
 type Person struct {
 	Name string
 	Age  int
 }
+```
+
+The above code declares a user-defined type called Person which has an underlying type of the struct literal that comes after that.
+
+```go
 var Jan Person		
 fmt.Println(Jan)		// { 0}
 marie := Person{
@@ -393,14 +398,24 @@ A composite reference data type as well as a first class citizen in Go. The latt
 
 Go is a pass by value language. Non-reference types will be copied in memory when the are passed as a value to a function. This applies to receiver values as well as arguments. When these values are copied, they exist only in the scope of that function. In case you need to change the state of a non-reference value outside of the scope of a function, you will need to pass the pointer to that value.
 
+Example function in Go:
 
-More on functions [here](https://github.com/saidvandeklundert/go/blob/main/functions.md).
+```go
+//function with input and output:
+func multiply(a, b int)(c int) {	
+	c = a * b
+	return c
+}
+```
 
 ##### Methods
+
+Go supports methods on user defined types.
 
 ```
 Methods give us this syntactic sugar that a piece of data has behavior. - William Kennedy
 ```
+
 A method belongs to a type, a function belongs to a package. A method is defined as a function with a reciever argument. The receiver argument precedes the function name:
 ```go
 func (r receiverType) name(s string, i int)(returnString string, returnInt int){
@@ -410,87 +425,64 @@ func (r receiverType) name(s string, i int)(returnString string, returnInt int){
 }
 ```
 
+Example method:
+```go
+type myString string		// User defined myString that has the underlying type string
+
+// (m myString): Receiver, in this case a value receiver
+//			Repeater: function name
+//					(x int): function argument
+func (m myString) Repeater(x int) {
+	for i := 1; i <= x; i++ {
+		fmt.Println(m)
+	}
+}
+
+x := myString("yo")
+x.Repeater(3)
+/*
+yo
+yo
+yo
+*/
+```
+
 In effect, this will allow you to run the function/method on the reciever type/object. 
 
-In Go, you could argue, there are three classes of types:
-- built-in ([numerics](https://golang.org/ref/spec#Numeric_types), string and bool)
-- reference types (slices, maps, channels, interface functions and channels)
-- user defined types (struct types)
+The receiver can be a value receiver or a pointer receiver. If your methods modify the receiver, you _must_ use a pointer receiver. If this is not the case, you can use a value receiver.  
 
-Tip from William Kennedy:
+Tips from William Kennedy:
 - use value semantics when working with built-in types 
 - use value semantics when working with reference types 
   - exception is when a slice or a map is passed down the call stack and to a function that is named decode or unmarshall
 - for your own structs, think about what is best suited. When in doubt, choose pointer semantics at first
 
-Try to be consistent in the semantic that you chose.
-
-In Python, something similar would be creating a class and then running a method on an instantiated object of that class using `self`:
-```python
->>> class MyClass:
-...     def name(self):
-...         return 'hello world'
-... 
->>> 
->>> instanceOfMyClass = MyClass()
->>> instanceOfMyClass.name()
-'hello world'
-```
-
-Note that this would be similar, it is NOT the same.
-
+Example of a pointer and a value receiver:
 ```go
-func name() {
-	// function body, the code goes here
-	fmt.Printf("Running the function.")
-}
-
-//function with input and output:
-func multiply(a, b int)(c int) {	
-	c = a * b
-	return c
-}
-
-// since c is a named result value, it is returned implicitly: 
-func multiply(a, b int)(c int) {	
-	c = a * b
-	return					// aka naked return: returns the named return values
-}
-
-// print the function or store the result in a var:
-fmt.Println(multiply(2, 6))
-c = multiply(2, 6)
-
-// Mind Go's pass by value, important when dealing with functions that change aggregate values.
-// Here is a struct:
-type SomeStruct struct {
+type Person struct {
 	Name string
 }
-// Func that changes struct:
-func changeSomeStruct(s SomeStruct) SomeStruct {
-	s.Name = "new_name"
-	return s
+
+// Pointer receiver:
+func (p *Person) NameSetter(n string) {
+	p.Name = n
 }
-// Define struct, print it to screen, change it and print it to screen again:
-s := SomeStruct{Name: "name"}
-fmt.Printf("struct: %#v\n", s.Name) 	// struct: "name"
-s = changeSomeStruct(s)					// pass the struct (s) value and re-assign it to s
-fmt.Printf("struct: %#v\n", s.Name)		// struct: "new_name"
 
-
-// Now the same with a map (map is reference type):
-func changeMapping(m map[string]string) {
-	delete(m, "a")
-	return
+// Value receiver:
+func (p Person) NamePrinter() {
+	fmt.Println(p.Name)
 }
-mapping := map[string]string{"a": "a", "b": "b"}
-fmt.Printf("mapping: %#v\n", mapping)		//mapping: map[string]string{"a":"a", "b":"b"}
-changeMapping(mapping)
-fmt.Printf("mapping: %#v\n", mapping)		// mapping: map[string]string{"b":"b"}
 
+jan := Person{"Jan"}
+jan.NameSetter("Said")		// Name change will persist because we used a pointer receiver
+jan.NamePrinter()			// We can use the value since we do not modify the Person type in any way
+/*
+Said
+*/
 ```
-
-A function literal in Go is similar to a lambda expression in Python.
+The above is not idiomatic Go:
+- do not use getter or setter methods. Access the fields of a type directly and use methods for the business logic
+- try to be consistent in the semantic that you chose, either all value or all pointer recievers
 
 More on functions and methods [here](https://github.com/saidvandeklundert/go/blob/main/functions.md)
 

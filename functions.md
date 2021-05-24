@@ -10,13 +10,60 @@ Functions are first-class citizens in Go.
 
 If a function returns something, the `return` keyword must be used. If a function does not return anything, it can be omitted. When a function has no input parameters, we use empty parentheses (`()`). If a function does not return anything, those parentheses can be skipped.
 
-In case multiple input parameters are of the same type, we comma separate the parameters and specify the type once. Example of a basic function:
+In case multiple input parameters are of the same type, we comma separate the parameters and specify the type once. 
+
+Examples that detail the function basics:
+
 ```go
+func name() {
+	// function body, the code goes here
+	fmt.Printf("Running the function.")
+}
+
+//function with input and output:
 func multiply(a, b int)(c int) {	
 	c = a * b
 	return c
 }
+
+// since c is a named result value, it is returned implicitly: 
+func multiply(a, b int)(c int) {	
+	c = a * b
+	return					// aka naked return: returns the named return values
+}
+
+// print the function or store the result in a var:
+fmt.Println(multiply(2, 6))
+c = multiply(2, 6)
+
+// Mind Go's pass by value, important when dealing with functions that change aggregate values.
+// Here is a struct:
+type SomeStruct struct {
+	Name string
+}
+// Func that changes struct:
+func changeSomeStruct(s SomeStruct) SomeStruct {
+	s.Name = "new_name"
+	return s
+}
+// Define struct, print it to screen, change it and print it to screen again:
+s := SomeStruct{Name: "name"}
+fmt.Printf("struct: %#v\n", s.Name) 	// struct: "name"
+s = changeSomeStruct(s)					// pass the struct (s) value and re-assign it to s
+fmt.Printf("struct: %#v\n", s.Name)		// struct: "new_name"
+
+
+// Now the same with a map (map is reference type):
+func changeMapping(m map[string]string) {
+	delete(m, "a")
+	return
+}
+mapping := map[string]string{"a": "a", "b": "b"}
+fmt.Printf("mapping: %#v\n", mapping)		//mapping: map[string]string{"a":"a", "b":"b"}
+changeMapping(mapping)
+fmt.Printf("mapping: %#v\n", mapping)		// mapping: map[string]string{"b":"b"}
 ```
+
 
 
 ## Named and optional paramers
