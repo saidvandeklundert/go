@@ -102,3 +102,8 @@ newS := make([]int, 0, 10)
 newS = append(newS, 10)		// [ 10 ]
 ```
 
+
+
+## Slices as buffers
+
+Go has a garbage collector that does all the work for you, but it is still work that needs to be done. You can save the garbage collector some work by declaring a slice of bytes once and re-use that as a buffer when we read data from a source. This avoids unneeded allocations.

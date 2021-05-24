@@ -389,15 +389,10 @@ By convention, naming variables is done using camel case (ex. `numTries`) when a
 The first letter indicates that it is a package level declaration. So unless something is a package level declaration, do not capitalize the first letter.
 #### functions:
 
-A composite reference data type as well as a first class citizen in Go.
+A composite reference data type as well as a first class citizen in Go. The latter means that a function can be passed as an argument to another function.
 
-Go is a pass by value language. Non-reference types will be copied in memory when the are passed as a value to a function. This applies to receiver values as well as arguments.
+Go is a pass by value language. Non-reference types will be copied in memory when the are passed as a value to a function. This applies to receiver values as well as arguments. When these values are copied, they exist only in the scope of that function. In case you need to change the state of a non-reference value outside of the scope of a function, you will need to pass the pointer to that value.
 
-When these values are copied, they exist only in the scope of that function. In case you need to change the state of a non-reference value outside of the scope of a function, you will need to pass the pointer to that value.
-
-Functions are first-class citizens in Go.
-
-A function can be passed as an argument to another function.
 
 More on functions [here](https://github.com/saidvandeklundert/go/blob/main/functions.md).
 
@@ -501,17 +496,64 @@ More on functions and methods [here](https://github.com/saidvandeklundert/go/blo
 
 #### pointers:
 
-Pointers store the memory address of a value. There is a pointer type for every type.
+A pointer is nothing more then a variable that contains the location in memory where a value is stored.
 
-Go is `pass by value`. When a non-reference type is passed to a function, the function will not operate on that data. Instead, it will create a copy and use that copy inside the body of the function. This is giving a certain amount of isolation and immutability. 
+In other words, pointers store the memory address of a value. There is a pointer-type for every type.
 
-It is possible to pass a pointer to a function.This can be used in case you want to have a function change the value of a non-reference type outside the function.
+The zero value for a pointer is `nil`. Slices, maps and functions, implemented using pointers, also have a zero value of `nil`.
+
+Go is `pass by value`. When a non-reference type is passed to a function, the function will not operate on that data. Instead, it will create a copy and use that copy inside the body of the function. This gives us a certain amount of isolation and immutability. 
+
+When we pass a pointer to a function, Go is still doing it's `pass by value` thing. However, in the case of a pointer, the value is pointing to the address in memory where the original data is found. This means it is now possible to change the value of the original data inside the function.
+
+It is possible to pass a pointer for primitives (int, float, byte, string, rune & bool) or structs to a function. An example of when you would want to do this is when you want to change a struct and have that change persist untill after the function is completed.
+
+There are 2 important operators for working with pointers in Go:
+- `*`: indirection operator (or dereferencing operator)
+- `&`: address operator
+
+When we pass a pointer to a func, it is important to understand we need to derefence it in case we want to alter the value to which the pointer is pointing to. 
+
+In case we do not dereference the pointer when we attempt to change it, but simply change the value, we are not touching the pointed-to value. Instead, we merely alter the value of the pointer in memory.
+
+```go
+func updateFail(p *int) {
+	x := 20
+	p = &x		// here we change the value of the pointer
+}
+
+func updateProper(p *int) {
+	*p = 20		// here we dereference the pointer and set the value of what *p points to
+}
+func main() {
+	x := 10
+	updateFail(&x)
+	fmt.Println(x)		// 10
+	updateProper(&x)
+	fmt.Println(x)		// 20
+}
+```
+
+##### *
 
 `*` is known as the dereferencing operator. It has two use-cases:
-- It is used to declare a pointer variable: `var PointerInteger *int` declares the pointer
-- Access the value stored in the address: `*integerPointer` returns the value that the address refers to
+- It can be used to access the value stored in the address: 
+```go
+*integerPointer 	// returns the value that the address refers to
+```
+- It can be used to declare a pointer variable:
+```go
+var PointerInteger *int
+```
 
-`&` (think 'address of') is known as the address operator. It generates a pointer to it's operand.
+##### &
+
+When reading `&`, think 'address of'. The `&` is known as the address operator and it generates a pointer to it's operand.
+
+```go
+x := "Good morning"
+ptrTox := &x
+```
 
 
 Another shorthand:
@@ -522,48 +564,20 @@ And:
 - if `*` is used where you would declare a type, it is used to indicate we are working with a pointer
 - if `*` is used as an operator, it is used to work with the value that the pointer is referencing
 
-```go
-// the '*' (indirection operator) returns the value of the pointer
-// the '&' (address operator) returns the pointer to a value
+For function returns, always favor values over pointers. Use pointers in case state within the type is subject to change.
+
+For function parmeters, favor values over pointers. Use pointers when you want to permanently alter state in a type. Caveat may be when you are working with very big structs (Megabytes at least). In those cases, it may make sense to use pointers because copying over a large struct takes more time when compared to copying over a pointer.
 
 
-// Declare integer-type pointer:
-var PointerInteger *int
+Note:
 
-// Declare integer, integer-pointer and then print the values:
-var integer int = 100
-integerPointer := &integer		// & is used to assign the address of the integer to the pointer
-fmt.Printf(`
-Pointer memory addres:         %v
-Address of the pointer itself: %v
-Pointer value:                 %v
-`, integerPointer, &integerPointer, *integerPointer)
-}
-/* ^ gives the following:
-Pointer memory addres:         0xc0000ac058
-Address of the pointer itself: 0xc0000d8020
-Pointer value:                 100
-*/
+Maps and slices are reference values. When you pass them to a function and the function alters them, the changes persist.
 
+There is a subtle difference between a map and a slice that may bite. A map is a pointer to a struct. Any and all changes made to a map that is passed to a function persists.
 
-/*
-- change someString by changing the pointer value
-- assign value to 'value' and 'new_value' by referencing the pointer
-*/  
-var someString string = "word"		// declare string-literal
-pointer := &someString				// declare string-pointer
-fmt.Printf("%v\n", pointer) 		// print var value:		 	0xc000088230
-fmt.Printf("%T\n", pointer) 		// print variable type:		*string
-value := *pointer					//
-fmt.Printf("%v\n", value) 			// print var value:			word
-fmt.Printf("%T\n", value) 			// print var type:			string  
-*pointer = "WORD"					// assign the value to memory address the pointer points to
-new_value := *pointer				// short-declare new_value to pointer value 
-fmt.Printf("%v\n", pointer)			// print var value:			0xc000088230
-fmt.Printf("%v\n", new_value)		// print var value:			WORD  
-fmt.Printf("%v\n", someString)		// print var value:			WORD   
+A slice is a struct that contains a pointer to a backing array, a length and a capacity field. Changes to the backing array will persist, but if the slice grows in lenght or capacity, those changes are made to the COPY of the struct that is passed into the function!
 
-```
+More on pointers [here](https://github.com/saidvandeklundert/go/blob/main/pointers.md).
 
 #### channels (and Go routines):
 
@@ -759,7 +773,7 @@ For flow control, Go offers the following options:
 - switch statement
 - loop statement
 
-More on flow control  [here](https://github.com/saidvandeklundert/go/blob/main/flow_control.md)
+More on flow control [here](https://github.com/saidvandeklundert/go/blob/main/flow_control.md).
 
 
 ## Error handling
@@ -954,6 +968,9 @@ fmt.Println(x)
 
 In the previous example, x was shadowed in the `if` block. The value assigned inside the block disappears after the block is executed.
 
+## Go Garbage collector
+
+Garbage is data that has no more pointers pointing to it. That data should be freed up again to be reused. This is what the garbage collector does, clear out the garbage. Go has a garbage collector that does all the work for you, But it is still work that needs to be done.
 ## Stack and heap
 
 [Understanding Allocations: the Stack and the Heap - GopherCon SG 2019](https://www.youtube.com/watch?v=ZMZpH4yT7M0)
@@ -972,6 +989,8 @@ Stack is divided into frames. Function calls are alloted their own frame.
 If more memory then what is available to the stack is required, the program crashes in a stack overflow.
 
 Memory in the heap is controlled by the developper. It can be requested and released.
+
+The stack is a consecutve block of memor
 
 ##
 
