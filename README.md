@@ -498,11 +498,13 @@ More on functions and methods [here](https://github.com/saidvandeklundert/go/blo
 
 A pointer is nothing more then a variable that contains the location in memory where a value is stored.
 
-In other words, pointers store the memory address of a value. There is a pointer-type for every type.
+In other words, pointers store the memory address of a value. There is a pointer-type for every type, this includes user-defined types. Every time you declare a new type, you get a pointer-type with it. All pointers have the same 2 characteristics:
+- pointers start with a `*`
+- pointers are 4 bytes on 32-bit architectures and 8 bytes on 64-bit architectures
 
-The zero value for a pointer is `nil`. Slices, maps and functions, implemented using pointers, also have a zero value of `nil`.
+The zero value for a pointer is `nil`. Slices, maps and functions, implemented using pointers, also have a zero value of `nil`. 
 
-Go is `pass by value`. When a non-reference type is passed to a function, the function will not operate on that data. Instead, it will create a copy and use that copy inside the body of the function. This gives us a certain amount of isolation and immutability. 
+Go is `pass by value`, with the main benefit being readability. When a type is passed to a function, the function will not operate on that data. Instead, it will create a copy and use that copy inside the body of the function. This gives us a certain amount of isolation and immutability. 
 
 When we pass a pointer to a function, Go is still doing it's `pass by value` thing. However, in the case of a pointer, the value is pointing to the address in memory where the original data is found. This means it is now possible to change the value of the original data inside the function.
 
@@ -564,7 +566,15 @@ And:
 - if `*` is used where you would declare a type, it is used to indicate we are working with a pointer
 - if `*` is used as an operator, it is used to work with the value that the pointer is referencing
 
-For function returns, always favor values over pointers. Use pointers in case state within the type is subject to change.
+For function returns, always favor values over pointers. Use pointers in case state within the type is subject to change. Some additional advice from [William Kennedy](https://www.ardanlabs.com/blog/2017/05/language-mechanics-on-stacks-and-pointers.html):
+```
+If the word “share” doesn’t come out of your mouth, you don’t need to use a pointer. When learning about pointers, it’s important to think using a clear vocabulary and not operators or syntax. So remember, pointers are for sharing and replace the & operator for the word “sharing” as you read code.
+```
+
+Example:
+```go
+increment(&count)	// the & operator is saying 'I am sharing the count variable with the increment function'
+```
 
 For function parmeters, favor values over pointers. Use pointers when you want to permanently alter state in a type. Caveat may be when you are working with very big structs (Megabytes at least). In those cases, it may make sense to use pointers because copying over a large struct takes more time when compared to copying over a pointer.
 
@@ -984,7 +994,36 @@ code/text: 		stores instructions
 
 stack, static and code memory does not grow.
 
-Stack is divided into frames. Function calls are alloted their own frame.
+### Heap
+
+[William Kennedy](https://www.ardanlabs.com/blog/2017/05/language-mechanics-on-escape-analysis.html) on heaps:
+```
+The heap is a second area of memory, in addition to the stack, used for storing values. The heap is not self cleaning like stacks, so there is a bigger cost to using this memory. Primarily, the costs are associated with the garbage collector (GC), which must get involved to keep this area clean. When the GC runs, it will use 25% of your available CPU capacity. Plus, it can potentially create microseconds of “stop the world” latency. The benefit of having the GC is that you don’t need to worry about managing heap memory, which historically has been complicated and error prone.
+
+Values on the heap constitute memory allocations in Go. These allocations put pressure on the GC because every value on the heap that is no longer referenced by a pointer, needs to be removed. The more values that need to be checked and removed, the more work the GC must perform on every run. So, the pacing algorithm is constantly working to balance the size of the heap with the pace it runs at.
+..
+
+
+Value semantics keep values on the stack which reduces pressure on the GC. However, there are different copies of any given value that must be stored, tracked and maintained. Pointer semantics place values on the heap which can put pressure on the GC. However, they are efficient because there is only one value that needs to be stored, tracked and maintained. The key is using each semantic correctly, consistently and in balance.
+```
+### Stacks
+
+[William Kennedy](https://www.ardanlabs.com/blog/2017/05/language-mechanics-on-stacks-and-pointers.html) on stacks:
+```
+When your Go program starts up, the runtime creates the main goroutine to start executing all the initialization code including the code inside the main function. A goroutine is a path of execution that is placed on an operating system thread that eventually executes on some core. As of version 1.8, every goroutine is given an initial 2,048 byte block of contiguous memory which forms its stack space. This initial stack size has changed over the years and could change again in the future.
+
+The stack is important because it provides the physical memory space for the frame boundaries that are given to each individual function. 
+```
+
+
+### Frames
+
+Stack is divided into frames. Function calls are alloted their own frame. 
+
+[William Kennedy](https://www.ardanlabs.com/blog/2017/05/language-mechanics-on-stacks-and-pointers.html) on Frame Boundaries:
+```
+Functions execute within the scope of frame boundaries that provide an individual memory space for each respective function. Each frame allows a function to operate within their own context and also provides flow control. A function has direct access to the memory inside its frame, through the frame pointer, but access to memory outside its frame requires indirect access. For a function to access memory outside of its frame, that memory must be shared with the function. The mechanics and restrictions established by these frame boundaries need to be understood and learned first.
+```
 
 If more memory then what is available to the stack is required, the program crashes in a stack overflow.
 
