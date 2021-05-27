@@ -94,6 +94,45 @@ Sending on a closed channel will cause a panic so only the sender should close a
 
 Context can be used to ensure spawned Go routines are halted. This to prevent leaking of Go routines and to prevent wasting of resources.
 
+## The scheduler
+
+The Go scheduler is the 'behind-the-scenes' orechestrator of your Go programs. The design of the scheduler and the scheduling decisions of the Go scheduler impact the performance of the Go programs.
+
+The Go scheduler:
+- ensures created Goroutines are run/scheduled
+- pauses and resumes Goroutines (blocking channel operations, mutex operations)
+- coordinates: blocking system calls, network I/O, runtime tasks like garbage collection
+
+`Why` does Go need a scheduler?
+
+Instead of having kernel threads managed and scheduled by the OS, Go has Goroutines. These are user-space thread managed by the Go runtime. The Goroutines were implemented because they are cheaper when compared to kernel threads:
+- smaller memory footprint ( initial Goroutine stack 2KB)
+- faster creation, destruction and context switches (measured in ns instead of microseconds)
+
+In short, Go needs a scheduler because Go has Goroutines. 
+
+Goroutines are user-space threads and the Go scheduler multiplexes them onto Kernel threads.
+
+`What` the Go scheduler aims to achieve:
+- use a small number of kernal threads (because they are so expensive)
+- support high concurrency (run many many many Goroutines)
+- leverage parallelism and make use of available cores
+
+
+The `how` behind the `what`:
+- use a small number of kernal threads (because they are so expensive)
+  - re-use threads and limit the number of Goroutine-running threads
+- support high concurrency (run many many many Goroutines)
+  - threads use independant runqueues and keep them balanced
+- leverage parallelism and make use of available cores
+  - use a runqueue per core and employ thread spinning
+
+
+A lot of information came from:
+- William Kennedy's course on O'Reilly
+- Learning Go
+- `GopherCon 2017: Kavya Joshi - Understanding Channels`
+- `GopherCon 2018: Kavya Joshi - The Scheduler Saga`
 ## Examples
 
 
@@ -205,12 +244,12 @@ import (
 func main() {
 	start := time.Now()
 
-	// Creating bidirectional channels that can transport different types of values:
+	// Creating channels that can transport different types of values:
 	eve := make(chan int)
 	odd := make(chan int)
 	s_chan := make(chan string)
 
-	// Run a func that sends values in the different channels:
+	// Run a func that sends values into the channels:
 	go send(eve, odd, s_chan)
 
 	// Run a func that uses 'select' to read the different values from these channels:
@@ -219,8 +258,11 @@ func main() {
 	fmt.Println("Seconds the script took to complete: ", elapsed)
 }
 
+const delaySeconds = 2
+
+// Functions that sends different value types into the channels:
 func send(e, o chan<- int, s chan<- string) {
-	time.Sleep(4 * time.Second)
+	time.Sleep(delaySeconds * time.Second)
 	for i := 0; i < 5; i++ {
 		if i%2 == 0 {
 			e <- i
@@ -228,21 +270,22 @@ func send(e, o chan<- int, s chan<- string) {
 			o <- i
 		}
 	}
-	time.Sleep(4 * time.Second)
+	time.Sleep(delaySeconds * time.Second)
 	aSlice := []string{"some", "words", "were", "uttered"}
 	for _, word := range aSlice {
 		s <- word
 	}
-	time.Sleep(4 * time.Second)
+	time.Sleep(delaySeconds * time.Second)
 	for i := 0; i < 5; i++ {
 		if i%2 == 0 {
 			e <- i
 		}
 	}
-	time.Sleep(4 * time.Second)
+	time.Sleep(delaySeconds * time.Second)
 	s <- "fin"
 }
 
+// loops over channels, using select to handle the 
 func receive(e, o <-chan int, s <-chan string) {
 	// for instructs the function to just keep on running select
 	for {
@@ -259,12 +302,29 @@ func receive(e, o <-chan int, s <-chan string) {
 		//  every iteration resets the timer.
 		case <-time.After(5 * time.Second):
 			fmt.Println("Time is up!!")
-			return
+			return		// without this return, the program keeps hitting this case every 5 seconds.			
 		}
 	}
 }
-
+/* Output:
+Reading even from channel:  0
+Reading odd from channel:  1
+Reading even from channel:  2
+Reading odd from channel:  3
+Reading even from channel:  4
+Reading string from channel:  some
+Reading string from channel:  words
+Reading string from channel:  were
+Reading string from channel:  uttered
+Reading even from channel:  0
+Reading even from channel:  2
+Reading even from channel:  4
+Reading string from channel:  fin
+Time is up!!
+Seconds the script took to complete:  13s
+*/
 ```
+
 
 ### To sort:
 
@@ -322,7 +382,7 @@ func ConcurrentFunc(Nr int, wg *sync.WaitGroup) {
 	fmt.Printf("\nFinished ConcurrentFunc %d", Nr)
 }
 ```
-This example is found [here](https://github.com/saidvandeklundert/go/blob/main/examples/wait_group_simple.go). A more elaborate example is found [here](https://github.com/saidvandeklundert/go/blob/main/examples/wait_group.go).
+
 
 
 Go concurrency slogan:
