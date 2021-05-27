@@ -125,7 +125,7 @@ Summary:
 
 - `slices`: collection of elements that are indexable. Has a dynamic length.
 - `maps`: collection of indexable key-value pairs.
-- `channels`:
+- `channels`: facilitates communication between Go routines
 - `pointers`: stores the memory address of a value
 - `functions`: reusabe and organized block of code that performs an action
 
@@ -583,44 +583,24 @@ More on pointers [here](https://github.com/saidvandeklundert/go/blob/main/pointe
 
 #### channels (and Go routines):
 
+In the context of Go, the following terms are important:
+- `Goroutines`: User-space thread managed by the Go runtime. The thread is not managed by the OS. Goroutines are used to execute tasks independently.
+- `Channels`: reference type that is used for communication and synchronization between Goroutines.
+- `Go scheduler`: multiplexes Goroutines onto OS threads.
 
-Go scheduler is in charge of scheduling Go routines.
+`Channels`:
+- are Goroutine-safe
+- store and pass values between Goroutines
+- provide FIFO semantics (when they are buffered)
+- can cause Goroutines to block and unblock
 
-Concurrency is not parallelism.
+The zero value for a channel is `nil`.
 
-Concurrency: multiple threads executing code.
-
-Parallelism: multiple threads executed at the exact same time (requires multiple CPUs).
-
-
-The `main routine` has child routines created by the `go` keyword.
-
-`goroutine`: thread managed by the Go runtime.
-`go`: keyword that spawns a new thread go routine.
-
-Channels in go facilitate communication between the different go routines. Channels also have a type.
-
-After a channel is created, and a go routine is started, you can use the channel to:
-- send data into the channel
-- recieve values in the channel
-
-Example on how to make a channel:
-```go
-c := make(chan string)
-```
-
-Example on starting go routines:
-
-```go
-for _, link := range links {
-	go touchLink(link, c)
-}
-```
-More on this [here](https://github.com/saidvandeklundert/go/blob/main/concurrency_and_parallelism.md)
+More on channels, Goroutines and concurrency [here](https://github.com/saidvandeklundert/go/blob/main/concurrency_and_parallelism.md).
 
 ## Abstract types
 
-All types are concrete types, except the interface type. THe interface type is an abstract type. Unlike with a concrete type, we cannot directly use an interface type to create a value.
+All types are concrete types, except the interface type. The interface type is an abstract type. Unlike with a concrete type, we cannot directly use an interface type to create a value.
 #### interfaces:
 
 Specifies a set of 1 or more method signatures. The interface is an abstract type, meaning you cannot create an instance of the interface. 
@@ -822,6 +802,38 @@ if err != nil {
 }
 fmt.Println("We traversed the happy path! Converted number:", n)
 ```
+
+## Type assertion:
+
+Type assertion in Go is trying to assert the type of an interface value's underlying type. The assertion is written like so:
+```go
+x.(string)
+```
+
+In the previous example, `x` is the variable that refers to an interface type. Using `.(string)` on it, we assert that `x` is of the underlying type `string`. The assertion returns follwing the 'comma OK' idiom:
+
+```go
+var x interface{} = "hello"
+t, ok := x.(int)
+fmt.Println(t, ok)
+/*
+0 false
+*/
+```
+
+The previous examples shows a failing assertion. The zero value for the asserted type is returned as well as a `false`.
+
+```go
+var x interface{} = "hello"
+t, ok := x.(string)
+fmt.Println(t, ok)
+/*
+hello true
+*/
+```
+
+The previous example shows an assertion that matches the type of the value assigned to the interface. Here, the value of the interface is returned together with `true`.
+
 
 ## Type switch
 
