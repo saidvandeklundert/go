@@ -330,6 +330,11 @@ Seconds the script took to complete:  13s
 ```go
 // From Go in action
 // from https://github.com/goinaction/code/blob/master/chapter7/patterns/work/work.go
+//
+// Notes:
+// - the workers iterate the tasks one after the other
+// - if one tasks takes a long time, backing up one worker, the other workers can continue iterating through the tasks
+//
 package main
 
 import (
@@ -443,65 +448,6 @@ func (p *Pool) Shutdown() {
 	p.wg.Wait()
 }
 ```
-
-
-### To sort:
-
-You can go from general to specifics with channels:
-```go
-c := make(chan int) // bidirectional channel is created
-
-
-go send(c)		// bidirectional channel is passed in
-
-func send(c chan<- int)	// send channel
-```
-
-Example on how to make a channel:
-```go
-c := make(chan string)
-```
-
-Example on starting go routines:
-
-```go
-for _, link := range links {
-	go touchLink(link, c)
-}
-```
-
-
-Example staring a go routine and using wait group to ensure everything finishes:
-```go
-// Start 6 Go routines that wait 5 seconds. This function completes in less then 5 seconds:
-func ConcurrentExample() {
-	// define the wait group:
-	var wg sync.WaitGroup
-	fmt.Printf("\nStart ConcurrentExample Func")
-	// Start the Go routine and pass the address of the wait group:
-	go ConcurrentFunc(1, &wg)
-	go ConcurrentFunc(2, &wg)
-	go ConcurrentFunc(3, &wg)
-	go ConcurrentFunc(4, &wg)
-	go ConcurrentFunc(5, &wg)
-	go ConcurrentFunc(6, &wg)
-	// specify the number of wait groups:
-	wg.Add(6)
-	// Wait for all of them to finish:
-	wg.Wait()
-	fmt.Printf("\nFinished ConcurrentExample Func")
-}
-
-// Print a number and wait 5 seconds:
-func ConcurrentFunc(Nr int, wg *sync.WaitGroup) {
-	// Ensure we wrap up saying done even if we crash
-	defer wg.Done()
-	fmt.Printf("\nStart ConcurrentFunc %d", Nr)
-	time.Sleep(5 * time.Second)
-	fmt.Printf("\nFinished ConcurrentFunc %d", Nr)
-}
-```
-
 
 
 Go concurrency slogan:
