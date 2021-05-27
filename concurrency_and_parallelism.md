@@ -325,6 +325,125 @@ Seconds the script took to complete:  13s
 */
 ```
 
+### Work pattern using channels:
+
+```go
+// From Go in action
+// from https://github.com/goinaction/code/blob/master/chapter7/patterns/work/work.go
+package main
+
+import (
+	"log"
+	"sync"
+	"time"
+)
+
+// Provide some tasks
+var tasks = []string{
+	"build a swimming pool",
+	"bake a cake",
+	"run up stairs",
+	"climb a tree and catch wind",
+	"dig a ditch",
+	"lay bricks",
+	"dig a hole",
+	"build a house",
+	"get some paper",
+	"hunt a fox",
+	"catch fish",
+}
+
+// workPrinter provides special support for printing work:
+type workPrinter struct {
+	work string
+}
+
+// In this example, Task implements the Worker interface for the workPrinter struct.
+// Understanding how the interface is implemented makes it
+//  possible to have other struct methods implement the interface also.
+//
+// Other example: https://github.com/saidvandeklundert/go/blob/main/examples/gosnmp/snmp_worker_verbose.go#L88
+//
+func (w *workPrinter) Task() {
+	log.Println(w.work)
+	time.Sleep(3 * time.Second)
+}
+func main() {
+	// Increase the number of tasks( usefull if you want to up the workers to 200 or something):
+	for i := 0; i < 2; i++ {
+		tasks = append(tasks, tasks...)
+	}
+
+	// Create a work pool with x goroutines:
+	p := New(3)
+
+	// define a waitgroup and increment the counter for the amount of tasks we have
+	var wg sync.WaitGroup
+	wg.Add(len(tasks))
+
+	// iterate over the slice of names
+	for _, task := range tasks {
+		// Create a workPrinter and provide the
+		// specific task
+		np := workPrinter{
+			work: task,
+		}
+		go func() {
+			p.Run(&np)
+			wg.Done()
+		}()
+	}
+
+	wg.Wait()
+
+	// shutdown the work pool and wait for all existing work to be completed
+	p.Shutdown()
+}
+
+// Worker must be implemented by types that want to use
+// the work pool.
+type Worker interface {
+	Task()
+}
+
+// Pool provides a pool of goroutines that can execute any Worker
+// tasks that are submitted.
+type Pool struct {
+	work chan Worker
+	wg   sync.WaitGroup
+}
+
+// New creates a new work pool.
+func New(maxGoroutines int) *Pool {
+	p := Pool{
+		work: make(chan Worker),
+	}
+
+	p.wg.Add(maxGoroutines)
+	for i := 0; i < maxGoroutines; i++ {
+		go func() {
+			for w := range p.work {
+				w.Task()
+			}
+			p.wg.Done()
+		}()
+	}
+
+	return &p
+}
+
+// Run submits work to the pool.
+func (p *Pool) Run(w Worker) {
+	p.work <- w
+}
+
+// Shutdown waits for all the goroutines to shutdown.
+func (p *Pool) Shutdown() {
+	close(p.work)
+	p.wg.Wait()
+}
+```
+
 
 ### To sort:
 
