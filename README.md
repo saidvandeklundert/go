@@ -1,17 +1,16 @@
-# go
+# Go
 
-Developped at Google by Robert Griesemer, Rob Pike, and Ken Thompson. Created with concurrency and parallelism in mind. Additional background information can be found [here](https://github.com/saidvandeklundert/go/blob/main/go_background.md)
+Go was first released 2012. It was developped at Google by Robert Griesemer, Rob Pike, and Ken Thompson. Created with concurrency and parallelism in mind. Additional background information can be found [here](https://github.com/saidvandeklundert/go/blob/main/go_background.md)
 
-
-First released 2012.
 
 ![Go types overview](https://github.com/saidvandeklundert/go/blob/main/img/go_types.png)
-Basic types:
+
+**Basic types**:
   - `String types`
   - `Numeric types`
   - `Boolean types`
 
-Composite types:
+**Composite types**:
 - Aggregation types:
   - `arrays`
   - `structs`
@@ -34,7 +33,23 @@ Value types:
 - `structs`
 - `array`
 
+In Go, there is oftentimes also mention of other distinctions between the various types.
 
+`Abstract` and `concrete` types:
+- **abstract type**: interfaces
+- **concrete types**: the rest
+
+`Named`/`defined` and `unnamed`/`undefined` types:
+- **named**: type declared with a name
+- **unnamed**: type declared without a name by using a type literal
+
+**Underlying type**: Each type (T) has an underlying type. If T is one of the predeclared boolean, numeric, or string types, or a type literal, the corresponding underlying type is T itself. Otherwise, T's underlying type is the underlying type of the type to which T refers in its type declaration.
+
+**Type inference**: variables declared without a specific type have their type inferred from the value on the right.
+
+**Type conversion**: converting one type to another. Example would be `float64(i)`.
+
+**Type definition**: creates a new, distinct type with the same underlying type and operations as the given type, and binds an identifier to it.
 ## Basic types:
 
 There are the following basic types in Go:
@@ -113,8 +128,6 @@ The zero value for a bool is `false`.
 
 ## Composite types:
 
-
-Summary:
 
 **Aggregation types**:
 
@@ -1073,6 +1086,10 @@ Additionally we have `Share` and `Run`. Run will run the code in the browser and
 
 
 
-# links:
-
-['pointers'](https://youtu.be/sTFJtxJXkaY)
+Inspiriation for these notes came from:
+- Learning Go
+- Go in action
+- `GopherCon 2017: Kavya Joshi - Understanding Channels`
+- `GopherCon 2018: Kavya Joshi - The Scheduler Saga`
+- ['pointers'](https://youtu.be/sTFJtxJXkaY)
+- [The Go Programming Language Specification](https://golang.org/ref/spec)

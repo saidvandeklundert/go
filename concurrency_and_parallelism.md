@@ -69,24 +69,24 @@ Channels in go facilitate communication between different Go routines. In a sens
 
 The channel is a reference type. And in addition to that, it is defined for a specific type. The zero value for a channel is `nil`.
 
-Channels are blocking. This means that after you push a message onto a channel, the operation is blocking untill it is read.
+Channels are blocking. This means that after you push a message onto a channel, the operation is blocking until the value is read from the channel.
 
 After a channel is created, and a go routine is started, you can use the channel to:
 - send data into the channel
 - recieve values in the channel
 
 
-`Receive channel`:
+**Receive channel**:
 - can receive values from the channel
 - cannot close a recieve channel
 
-`Send channel`:
+**Send channel**:
 - push values to the channel
 - cannot receive/pull or read from the channel
 
 
 You can use the comma idiom to check if a channel is empty:
-`v, ok := <-ch`
+**v, ok := <-ch**
 
 `ok` is `false` if there are no more values to receive and the channel is closed.
 
@@ -97,6 +97,176 @@ Context can be used to ensure spawned Go routines are halted. This to prevent le
 ## Examples
 
 
+### Simple Goroutines example
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(2)				// add the number of Goroutines we will use to the wait group
+
+	// Launch a Goroutine from a closure (has access to wg defined in main)
+	go func() {
+		example()	// Have Goroutine run example()
+		wg.Done()	// Done decrements the WaitGroup counter by one 
+	}()
+	// Launch another Goroutine:
+	go func() {
+		example()
+		wg.Done()
+	}()
+
+	wg.Wait()	// Wait blocks until the WaitGroup counter is zero.
+
+	fmt.Println("Program finished.")
+}
+
+func example() {
+	time.Sleep(5 * time.Second)
+	fmt.Println("waited 5 seconds")
+}
+```
+2 Go routines execute the example task that takes 5 seconds in +/- 5 seconds.
+
+
+### Simple channels example:
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	numbers := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
+	// create the channel using make:
+	c := make(chan int)
+
+	// Launch the go routines that will execute the example function:
+	for _, number := range numbers {
+		go example(number, c)
+	}
+	
+	// Range over all channels:
+	for range numbers {
+		// Inside the for clause we specify what we do with an individual channel:
+		x := <-c				// read from the channel
+		fmt.Println(x)
+	}
+}
+
+// example function writes an integer to the channel:
+func example(number int, c chan int) {
+	time.Sleep(2 * time.Second)
+	c <- number
+}
+/* Output:
+15
+5
+0
+9
+11
+12
+7
+3
+8
+6
+2
+4
+14
+13
+10
+1
+*/
+```
+
+Notice that the Goroutines do not finish the work in the same order that they started it.
+
+
+### Channels example including select and a timeout
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	start := time.Now()
+
+	// Creating bidirectional channels that can transport different types of values:
+	eve := make(chan int)
+	odd := make(chan int)
+	s_chan := make(chan string)
+
+	// Run a func that sends values in the different channels:
+	go send(eve, odd, s_chan)
+
+	// Run a func that uses 'select' to read the different values from these channels:
+	receive(eve, odd, s_chan)
+	elapsed := time.Since(start)
+	fmt.Println("Seconds the script took to complete: ", elapsed)
+}
+
+func send(e, o chan<- int, s chan<- string) {
+	time.Sleep(4 * time.Second)
+	for i := 0; i < 5; i++ {
+		if i%2 == 0 {
+			e <- i
+		} else {
+			o <- i
+		}
+	}
+	time.Sleep(4 * time.Second)
+	aSlice := []string{"some", "words", "were", "uttered"}
+	for _, word := range aSlice {
+		s <- word
+	}
+	time.Sleep(4 * time.Second)
+	for i := 0; i < 5; i++ {
+		if i%2 == 0 {
+			e <- i
+		}
+	}
+	time.Sleep(4 * time.Second)
+	s <- "fin"
+}
+
+func receive(e, o <-chan int, s <-chan string) {
+	// for instructs the function to just keep on running select
+	for {
+		// select blocks until one of its cases can run, then it executes that case.
+		//  It chooses one at random if multiple are ready.
+		select {
+		case v := <-e:
+			fmt.Println("Reading even from channel: ", v)
+		case v := <-o:
+			fmt.Println("Reading odd from channel: ", v)
+		case v := <-s:
+			fmt.Println("Reading string from channel: ", v)
+		// Timeout is set in this case,
+		//  every iteration resets the timer.
+		case <-time.After(5 * time.Second):
+			fmt.Println("Time is up!!")
+			return
+		}
+	}
+}
+
+```
+
+### To sort:
 
 You can go from general to specifics with channels:
 ```go
@@ -122,36 +292,6 @@ for _, link := range links {
 ```
 
 
-Example using channels:
-```go
-package main
-
-import (
-	"fmt"
-	"time"
-)
-
-func main() {
-	/* create a slice */
-	numbers := []int{0, 1, 2, 3, 4, 5, 6, 7, 8}
-
-	c := make(chan int)
-
-	for _, number := range numbers {
-		go channlFunc(number, c)
-	}
-
-	for range numbers {
-		fmt.Println(<-c)
-	}
-}
-
-func channlFunc(number int, c chan int) {
-	time.Sleep(2 * time.Second)
-	c <- number
-}
-
-```
 Example staring a go routine and using wait group to ensure everything finishes:
 ```go
 // Start 6 Go routines that wait 5 seconds. This function completes in less then 5 seconds:
@@ -191,8 +331,4 @@ Go concurrency slogan:
 Do not communicate by sharing memory; instead, share memory by communicating.
 ```
 
-Inspiriation for these notes came from:
-- Learning Go
-- Go in action
-- `GopherCon 2017: Kavya Joshi - Understanding Channels`
-- `GopherCon 2018: Kavya Joshi - The Scheduler Saga`
+
