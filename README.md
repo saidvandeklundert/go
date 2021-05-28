@@ -2,8 +2,10 @@
 
 Go was first released 2012. It was developped at Google by Robert Griesemer, Rob Pike, and Ken Thompson. Created with concurrency and parallelism in mind. Additional background information can be found [here](https://github.com/saidvandeklundert/go/blob/main/go_background.md)
 
+## Types in Go
 
 ![Go types overview](https://github.com/saidvandeklundert/go/blob/main/img/go_types.png)
+
 
 **Basic types**:
   - `String types`
@@ -23,9 +25,11 @@ Go was first released 2012. It was developped at Google by Robert Griesemer, Rob
 - Abstract type:
   - `interface`
 
+### Additional type categories in Go:
 
+Reading documentation, code and blogs, the following categorisations also occur:
 
-Value types:
+**Value types**:
 - `int`
 - `float`
 - `string`
@@ -33,15 +37,17 @@ Value types:
 - `structs`
 - `array`
 
-In Go, there is oftentimes also mention of other distinctions between the various types.
-
-`Abstract` and `concrete` types:
+**Abstract** and **concrete** types:
 - **abstract type**: interfaces
 - **concrete types**: the rest
 
-`Named`/`defined` and `unnamed`/`undefined` types:
+**Named**/**defined** and **unnamed**/**undefined** types:
 - **named**: type declared with a name
 - **unnamed**: type declared without a name by using a type literal
+
+### Additional defitions:
+
+In the context of types, Go oftentimes also mentions the following definitions:
 
 **Underlying type**: Each type (T) has an underlying type. If T is one of the predeclared boolean, numeric, or string types, or a type literal, the corresponding underlying type is T itself. Otherwise, T's underlying type is the underlying type of the type to which T refers in its type declaration.
 
@@ -50,14 +56,16 @@ In Go, there is oftentimes also mention of other distinctions between the variou
 **Type conversion**: converting one type to another. Example would be `float64(i)`.
 
 **Type definition**: creates a new, distinct type with the same underlying type and operations as the given type, and binds an identifier to it.
+
 ## Basic types:
 
 There are the following basic types in Go:
-- String types: set of string values.
-- Numeric types: integers, floats, bytes and runes.
-- Boolean types: true and false.
+- **String types**: set of string values.
+- **Numeric types**: integers, floats, bytes and runes.
+- **Boolean types**: true and false.
 
 Defining basic types:
+
 ```go
 // Declare string with it's 0 value
 var a string
@@ -71,8 +79,6 @@ Word = "new word"
 // Short declare new string variable, have Go infer the type
 AnotherWord := "another word"		// := can only initialize values!
 ```
-
-
 #### String types:
 
 `string`: a read-only slice of immutable bytes. Strings are utf-8 encoded by default. The zero value is an empty string
@@ -815,10 +821,13 @@ if err != nil {
 }
 fmt.Println("We traversed the happy path! Converted number:", n)
 ```
+More on error handling [here](https://github.com/saidvandeklundert/go/blob/main/error_handling.md).
 
 ## Type assertion:
 
-Type assertion in Go is trying to assert the type of an interface value's underlying type. The assertion is written like so:
+Type assertion in Go is trying to assert the type of an interface value's underlying type. 
+
+The assertion is written like so:
 ```go
 x.(string)
 ```
