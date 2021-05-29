@@ -57,7 +57,7 @@ func (ssp SoftSpokenPerson) Sleep() {
 	fmt.Println("zzzzzzzzzzzzzzzzzzzz")
 }
 ```
-We can see there was no explicit declaration of intent and no syntax involved here whatsoever. The interface was implemented imlicitly through the definition of the methods on the type `SoftSpokenPerson`.
+We can see there was no explicit declaration of intent and no syntax involved here whatsoever. The interface was implemented imlicitly through the definition of the interface methods on the type `SoftSpokenPerson`. Through that definition, we `satisfied` the interface.
 
 Let's use the interfaces:
 
@@ -79,6 +79,23 @@ Greets with a soft voice: Hello there.
 zzzzzzzzzzzzzzzzzzzz
 */
 ```
+
+Note that in order to implement an interface, the type has to implement `all` of the methods from the interface. To verify that this was done, you could do something like this:
+
+```go
+var h HumanBehaviors    // h is the zero value for the interface
+h = silentBob   // h is assigned the value of silentBob
+t, ok := h.(interface{ HumanBehaviors })    // we assert that the type of h is HumanBehaviors
+fmt.Printf("t: %v ok: %v", t, ok)
+/* Output:
+t: {{Bob}} ok: true
+
+To see it fail, comment out one of the methods so that the interface is no longer satisfied. 
+ You will start seeing errors as soon as you do this.
+*/
+```
+
+
 
 
 If you have my method you are also my type.

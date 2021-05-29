@@ -40,9 +40,27 @@ func (sp SoftSpokenPerson) Speak(s string) {
 	fmt.Println("Speaks with a soft voice: ", s)
 }
 
+func (cp ConfidentPerson) Greet(s string) (g string) {
+	g = fmt.Sprintf("Greets with a soft voice: %s", s)
+	return g
+}
+
+func (lp LoudPerson) Greet(s string) (g string) {
+	g = fmt.Sprintf("Greets with a soft voice: %s", s)
+	return g
+}
+
 func (sp SoftSpokenPerson) Greet(s string) (g string) {
 	g = fmt.Sprintf("Greets with a soft voice: %s", s)
 	return g
+}
+
+func (cp ConfidentPerson) Sleep() {
+	fmt.Println("zzzzzzzzzzzzzzzzzzzz")
+}
+
+func (lp LoudPerson) Sleep() {
+	fmt.Println("zzzzzzzzzzzzzzzzzzzz")
 }
 
 func (sp SoftSpokenPerson) Sleep() {
@@ -81,4 +99,33 @@ func main() {
 	silentBob.Sleep()
 	loudLarry.Speak("WOW THIS IS AMAZING!")
 
+	// Assign the interface to a variable:
+	var h HumanBehaviors
+	h = silentBob
+	h.Sleep()
+	h.Greet("Hello there.")
+	h.Speak("The advantage here is that you can use the interface methods.\n You can do so without being able to access or change the underlying values.")
+
+	// Verifying that the interface is implemented:
+	//fmt.Printf("%T\n%T\n%T", silentBob, confidentDave, loudLarry)
+	h = silentBob
+	t, ok := h.(interface{ HumanBehaviors })
+	fmt.Printf("t: %v ok: %v", t, ok)
+	h = confidentDave
+	t1, ok1 := h.(interface{ HumanBehaviors })
+	fmt.Printf("t1: %v ok1: %v", t1, ok1)
+	h = loudLarry
+	t2, ok2 := h.(interface{ HumanBehaviors })
+	fmt.Printf("t2: %v ok2: %v", t2, ok2)
+	/*
+
+			To see this fail, comment out a method.
+
+			For example, comment out the LoudPerson Greet method.
+			 You will notice the following error as you attempt to run the script:
+
+
+		.\interfaces.go:112:4: cannot use loudLarry (type LoudPerson) as type HumanBehaviors in assignment:
+		        LoudPerson does not implement HumanBehaviors (missing Greet method)
+	*/
 }

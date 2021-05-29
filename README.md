@@ -621,11 +621,9 @@ More on channels, Goroutines and concurrency [here](https://github.com/saidvande
 
 #### interfaces:
 
-All types are concrete types, except the interface type. 
+All types are concrete types, except the interface type. The interface type is an abstract type and unlike with a concrete type, we cannot directly use an interface type to create a value.
 
-The interface type is an abstract type. Unlike with a concrete type, we cannot directly use an interface type to create a value.
-
-Interfaces can be usefull in case a collection of methods do something that can be re-used for a variety of objects. Interfaces in Go are oftentimes explained (and used to) define a behavior, like printing, writing etc.
+Interfaces can be usefull in case a method does something that can be re-used for a variety of objects. Interfaces in Go are oftentimes explained as something that is used to define a behavior, like printing, writing etc.
 
 You can create a variable that is an interface type and that has the methods that belong to the interface. This makes the method a custom type as well as a collection of methods.
 
@@ -796,7 +794,7 @@ fmt.Println("We traversed the happy path! Converted number:", n)
 ```
 More on error handling [here](https://github.com/saidvandeklundert/go/blob/main/error_handling.md).
 
-## Type assertion:
+## Type assertion and type switches:
 
 Type assertion in Go is trying to assert the type of an interface value's underlying type. 
 
@@ -804,33 +802,7 @@ The assertion is written like so:
 ```go
 x.(string)
 ```
-
-In the previous example, `x` is the variable that refers to an interface type. Using `.(string)` on it, we assert that `x` is of the underlying type `string`. The assertion returns follwing the 'comma OK' idiom:
-
-```go
-var x interface{} = "hello"
-t, ok := x.(int)
-fmt.Println(t, ok)
-/*
-0 false
-*/
-```
-
-The previous examples shows a failing assertion. The zero value for the asserted type is returned as well as a `false`.
-
-```go
-var x interface{} = "hello"
-t, ok := x.(string)
-fmt.Println(t, ok)
-/*
-hello true
-*/
-```
-
-The previous example shows an assertion that matches the type of the value assigned to the interface. Here, the value of the interface is returned together with `true`.
-
-
-## Type switch
+When type switches are mentioned, what is meant is a `switch` statement that has various assertions defined for it's cases, like so:
 
 ```go
 func typeSwitch(i interface{}) {
@@ -855,6 +827,8 @@ func main() {
 	No case statement for bool!
 */
 ```
+
+More on type assertions and type switches [here](https://github.com/saidvandeklundert/go/blob/main/type_assertion_and_type_switches.md)
 
 ## Other
 
