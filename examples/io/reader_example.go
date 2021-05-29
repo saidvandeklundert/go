@@ -10,8 +10,10 @@ import (
 func main() {
 	fmt.Println("stringReader()")
 	stringReader()
-	//fmt.Println("readFile()")
-	//readFile()
+	fmt.Println("readFile()")
+	readFile()
+	fmt.Println("genericFileRead()")
+	genericFileRead()
 
 }
 
@@ -35,6 +37,8 @@ func stringReader() {
 		if n > 0 {
 			fmt.Println(buf[:n]) // Here we use n to read exactly the number of bytes written to the buffer.
 			// without this, the last iteration would read 'old' data.
+			// Here we print the same bytes from the buffer as a string:
+			fmt.Println(string(buf[:n]))
 		}
 	}
 }
@@ -61,5 +65,40 @@ func readFile() {
 		if n > 0 {
 			fmt.Println(string(buf[:n]))
 		}
+	}
+}
+
+// Generic reader function:
+func genericReader(r io.Reader, bs int) {
+	// define buffer
+	buf := make([]byte, bs)
+
+	for {
+		// read from buffer
+		n, err := r.Read(buf)
+		// io.EOF indicates there is nothing left to read
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		// print up to n bytes of the buffer:
+		if n > 0 {
+			fmt.Println(string(buf[:n]))
+		}
+	}
+}
+
+// Using the generic reader function:
+func genericFileRead() {
+	f, err := os.Open("sample.txt")
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		defer f.Close()
+		genericReader(f, 20)
 	}
 }

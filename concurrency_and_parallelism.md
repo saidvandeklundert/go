@@ -461,3 +461,6 @@ Do not communicate by sharing memory; instead, share memory by communicating.
 ```
 
 
+### to sort:
+
+Green threads: user level threads. Scheduled as a user level process, not schedules by the Kernel. Green thread memory comes from the heap, not from the stack. In Go, these are known as Goroutines.

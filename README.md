@@ -619,49 +619,22 @@ More on channels, Goroutines and concurrency [here](https://github.com/saidvande
 
 ## Abstract types
 
-All types are concrete types, except the interface type. The interface type is an abstract type. Unlike with a concrete type, we cannot directly use an interface type to create a value.
 #### interfaces:
 
-Specifies a set of 1 or more method signatures. The interface is an abstract type, meaning you cannot create an instance of the interface. 
+All types are concrete types, except the interface type. 
 
-Interfaces define a behavior. Something like printing, running, writing etc.
+The interface type is an abstract type. Unlike with a concrete type, we cannot directly use an interface type to create a value.
+
+Interfaces can be usefull in case a collection of methods do something that can be re-used for a variety of objects. Interfaces in Go are oftentimes explained (and used to) define a behavior, like printing, writing etc.
 
 You can create a variable that is an interface type and that has the methods that belong to the interface. This makes the method a custom type as well as a collection of methods.
-
-Interfaces can be usefull in case a collection of methods do something that can be re-used for a variety of objects.
-
-An example could be in a game where there is an movement method for a knight. Now imagine here are 200+ other characters that also need to move left and right. Instead of copy-pasting the methods over and over again, we can define an interface with a set of methods that can be used by all characters
-
-Example steps to creating and using an interface:
-- define the structs that we want to allow use of the interface
-- define the functions for the structs
-- define the interface and mention the functions that are part of the interface
-- define the interface function that references the functions
-
 
 Interfaces are implicit. We do not manually define the correlation between the interface custom type and the other methods and functions.
 
 Interfaces can be seen as a contract to help manage types. The Go compiler will check all the values and the returns involved, but (obviously) will not check if the logic that is used is sound.
 
+More on interfaces [here](https://github.com/saidvandeklundert/go/blob/main/interfaces.md).
 
-Fun facts:
-- if the struct passed as a receiver is not used by the method, we can just pass the type
-- structs do not need to have any fields defined. A field-less struct can be used as placeholder for methods and interfaces
-
-It is possible to attach a method to almost any type (even functions!):
-- can use pointer and receiver values:
-  - int
-  - array
-  - string
-  - struct
-  - float64
-- use receiver values:
-  - slice
-  - map
-  - func
-  - chan
-
-'The bigger the interface, the weaker the abstraction' - Rob Pike.
 ## Go syntax
 
 ### Variables
