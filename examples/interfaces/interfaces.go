@@ -28,21 +28,32 @@ type SoftSpokenPerson struct {
 
 // 2
 
-func (cp ConfidentPerson) Speaker(s string) {
-	fmt.Println("confident voice: ", s)
+func (cp ConfidentPerson) Speak(s string) {
+	fmt.Println("Speaks with a confident voice: ", s)
 }
 
-func (lp LoudPerson) Speaker(s string) {
-	fmt.Println("loud voice: ", s)
+func (lp LoudPerson) Speak(s string) {
+	fmt.Println("Speaks with a loud voice: ", s)
 }
 
-func (ssp SoftSpokenPerson) Speaker(s string) {
-	fmt.Println("soft voice: ", s)
+func (sp SoftSpokenPerson) Speak(s string) {
+	fmt.Println("Speaks with a soft voice: ", s)
+}
+
+func (sp SoftSpokenPerson) Greet(s string) (g string) {
+	g = fmt.Sprintf("Greets with a soft voice: %s", s)
+	return g
+}
+
+func (sp SoftSpokenPerson) Sleep() {
+	fmt.Println("zzzzzzzzzzzzzzzzzzzz")
 }
 
 // 3
-type Speaker interface {
-	Speaker(s string)
+type HumanBehaviors interface {
+	Speak(s string)
+	Greet(s string) (g string)
+	Sleep()
 }
 
 func main() {
@@ -63,8 +74,11 @@ func main() {
 	}
 
 	// using the interface:
-	confidentDave.Speaker("charge")
-	silentBob.Speaker("hi")
-	loudLarry.Speaker("HELLO!")
+	confidentDave.Speak("charge")
+	silentBob.Speak("talk talk talk")
+	g := silentBob.Greet("Hello there.")
+	fmt.Println(g)
+	silentBob.Sleep()
+	loudLarry.Speak("WOW THIS IS AMAZING!")
 
 }
