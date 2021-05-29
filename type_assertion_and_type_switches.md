@@ -1,8 +1,7 @@
+Type assertion in Go is trying to assert the type of an interface value's underlying type. When type switches are mentioned, what is meant is a `switch` statement that has various assertions defined for it's cases.
 ## Type assertion:
 
-Type assertion in Go is trying to assert the type of an interface value's underlying type. 
-
-The assertion is written like so:
+A type assertion is written like so:
 ```go
 x.(string)
 ```
@@ -33,6 +32,8 @@ The previous example shows an assertion that matches the type of the value assig
 
 
 ## Type switch
+
+A type switch is written like so:
 
 ```go
 func typeSwitch(i interface{}) {
