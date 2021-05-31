@@ -23,6 +23,8 @@ type HumanBehaviors interface {
 }
 ```
 
+The interface is defined as a collection of method signatures.
+
 The methods are themed 'HumanBehaviors'. The `interface` keyword indicates this is an interface.
 
 This interface right now does not do anything and you cannot call it. It is an abstract that merely describes a set of behaviors.
@@ -95,40 +97,23 @@ To see it fail, comment out one of the methods so that the interface is no longe
 */
 ```
 
+Another thing about interfaces is that you can program against the interface itself. The following function is an example function that takes in the previously defined interface:
+```go
+func programAgainstTheInterface(h HumanBehaviors) {
+	h.Sleep()
+	h.Greet("Hello.")
+	h.Speak("Thus spoke the interface.")
+}
+// Pass in the previously defined instances of the structs that satisfy the interface:
+programAgainstTheInterface(silentBob)
+programAgainstTheInterface(loudLarry)
+```
+
+
+The interface is a type. If some type implements the ibterface, it also becomes that type. The full code for the examples we used is found [here](https://github.com/saidvandeklundert/go/tree/main/examples/interfaces).
 
 
 
-If you have my method you are also my type.
-
-The interface is a type. If some type implements the ibterface, it also becomes that type. 
-
-## Example
-
-
-
-
-
-
-Additional examples can be found [here](https://github.com/saidvandeklundert/go/tree/main/examples/interfaces).
-
-
-
-Fun facts:
-- if the struct passed as a receiver is not used by the method, we can just pass the type
-- structs do not need to have any fields defined. A field-less struct can be used as placeholder for methods and interfaces
-
-It is possible to attach a method to almost any type (even functions!):
-- can use pointer and receiver values:
-  - int
-  - array
-  - string
-  - struct
-  - float64
-- use receiver values:
-  - slice
-  - map
-  - func
-  - chan
-
+'If you have my method you are also my type.' - the interface
 
 'The bigger the interface, the weaker the abstraction' - Rob Pike.

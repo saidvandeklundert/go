@@ -74,7 +74,17 @@ type HumanBehaviors interface {
 	Sleep()
 }
 
+// 4
+func programAgainstTheInterface(h HumanBehaviors) {
+	h.Sleep()
+	h.Greet("Hello.")
+	h.Speak("Thus spoke the interface.")
+
+}
+
 func main() {
+	// 5 define instances of the structs
+
 	confidentDave := ConfidentPerson{
 		Person{
 			Name: "Dave",
@@ -90,7 +100,7 @@ func main() {
 			Name: "Larry",
 		},
 	}
-
+	// 6 run the method
 	// using the interface:
 	confidentDave.Speak("charge")
 	silentBob.Speak("talk talk talk")
@@ -128,4 +138,8 @@ func main() {
 		.\interfaces.go:112:4: cannot use loudLarry (type LoudPerson) as type HumanBehaviors in assignment:
 		        LoudPerson does not implement HumanBehaviors (missing Greet method)
 	*/
+	// 7
+	programAgainstTheInterface(silentBob)
+	programAgainstTheInterface(loudLarry)
+
 }

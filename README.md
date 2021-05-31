@@ -750,48 +750,44 @@ More on flow control [here](https://github.com/saidvandeklundert/go/blob/main/fl
 
 ## Error handling
 
-`nil`: predeclared identifier. Could be read as 'not yet initialized'. It is like Python's `None`.
+Convention in Go is to return an error as the last return value for a function. When a function executes as expected, the error parameter is returned with a `nil` value. If an error occurs, the error value is returned instead. The other parameters of the function should, by convention, return their zero value.
 
-All initialized values get a 0-value and for pointer-based types, the 0-value is `nil`.
+The `error` in Go is defined as follows:
 
-Typically, a function will return it's usual output and an error. If there is no error, the error value will be `nil`.
-
-Example:
 ```go
-
-func main() {
-	// Convert arg to number:
-	n, err := strconv.Atoi(os.Args[1])
-	fmt.Println("Converted number:", n)
-	fmt.Println("Error", err)
+type error interface {
+	Error() string
 }
 ```
-This will not fail: `go run . 100`:
-```
-Converted number: 100
-Error <nil>
-```
 
-We get a response and the error value is `nil`
+Note that an error is an interface. As such, returning `nil` is a valid value for one and it explains the convention as to why it is used to indicate 'no error'. Namely, `nil` is the zero value for an interface.
 
-This waill fail, `go run . a`:
-```
-Converted number: 0
-Error strconv.Atoi: parsing "a": invalid syntax
-PS 
-```
-We get a zero-value returned and the error is not `nil`. We should handle this error and not use the rest of the returned result.
+The `error` interface method, `Error()`, specifies a `string` is returned. 
 
-The typical pattern would be:
+The following is an example where an error is raised inside a function:
 ```go
-n, err := strconv.Atoi(os.Args[1])
-if err != nil {
-	//Handle the error
-	fmt.Println("Error", err)
-	return
+func exampleError(s string) (string, error) {
+	if len(s) <= 6 {
+		return "", errors.New("s was to short")
+	} else {
+		return s, nil
+	}
+
 }
-fmt.Println("We traversed the happy path! Converted number:", n)
 ```
+
+We can also raise and format errors using a convenient `fmt` function, like so:
+
+```go
+func exampleError(s string) (string, error) {
+	if len(s) <= 6 {
+		return "", fmt.Errorf("length of s should be > 6, it was %d", len(s))
+	} else {
+		return s, nil
+	}
+}
+```
+
 More on error handling [here](https://github.com/saidvandeklundert/go/blob/main/error_handling.md).
 
 ## Type assertion and type switches:
@@ -1004,9 +1000,20 @@ Memory in the heap is controlled by the developper. It can be requested and rele
 
 The stack is a consecutve block of memor
 
-##
+## nil
 
-"Make it correct, make it clear, make it concise, make it fast. In that order" - Wes Dyer
+Nill is a predeclared identifier. Could be read as 'not yet initialized'. It is like Python's `None`.
+
+Nil is the zero value for the following types:
+- pointers
+- slices
+- maps
+- interfaces
+- functions
+- channels
+
+Note that an error is an interface. As such, nil is a valid value for one and it is used to represent 'no error'.
+
 
 ## Ardan labs gotraning repo:
 

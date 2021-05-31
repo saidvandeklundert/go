@@ -195,9 +195,11 @@ func() {
 }() // <-()
 ```
 
-## Closures, functions are a parameter and returning functions from functions
+## Closures, functions as a parameter and returning functions from functions
 
-Functions declared inside of functions are closures. They allow you to limit a function's scope. The enclosing function provides an environment of it's own to the enclosed function. In the example closure, we can also see that a function can be passed as a parameter into a function.
+Functions declared inside of functions are closures. They allow you to limit a function's scope. The enclosing function provides an environment of it's own to the enclosed function. A way of putting it is saying that closures are statefull functions with their own environment. 
+
+In the example closure, we can also see that a function can be passed as a parameter into a function.
 
 ```go
 func enclosingFunction(envVar string) func(string) string {
@@ -376,3 +378,50 @@ RecEx(2, 2)         // 128: returns RecEx 5 x before it is > then 100, then retu
 RecEx(2, 100)       // 200: returns c immediately as it is > then 100
 ```
 
+## Methods
+
+
+It is possible to attach a method to almost any type (even functions!):
+- can use pointer and receiver values:
+  - int
+  - array
+  - string
+  - struct
+  - float64
+- use receiver values:
+  - slice
+  - map
+  - func
+  - chan
+
+Example where a method is implemented on a named type:
+```go
+type NamedString string
+
+func (s NamedString) DoubleDouble() {
+	fmt.Println(s + s)
+
+}
+var x NamedString
+x = "double"
+x.DoubleDouble()		//doubledouble
+```
+
+If the struct passed as a receiver is not used by the method, we can just pass the type. Structs do not need to have any fields defined. A field-less struct can be used as placeholder for methods and interfaces.
+
+Outfitting a struct with methods is more common. Following is an example where we define a struct with a field called `Name`. Additionally, a method to change this field name is implemented:
+
+```go
+type Person struct {
+	Name string
+}
+
+// Following passes in a pointer, allowing us to change the state of the struct:
+func (p *Person) ChangeName(n string) {
+	p.Name = n
+}
+
+jan := Person{Name: "Jan"}
+jan.ChangeName("Marie")
+fmt.Println(jan.Name) // Marie
+```
