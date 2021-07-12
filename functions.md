@@ -394,7 +394,8 @@ It is possible to attach a method to almost any type (even functions!):
   - func
   - chan
 
-Example where a method is implemented on a named type:
+The following is an example where a method is implemented on a named type:
+
 ```go
 type NamedString string
 
@@ -406,6 +407,8 @@ var x NamedString
 x = "double"
 x.DoubleDouble()		//doubledouble
 ```
+
+The `(s NamedString)` in `func (s NamedString) DoubleDouble()` is called the reciever. This parameter attaches the function to the type of that parameter.
 
 If the struct passed as a receiver is not used by the method, we can just pass the type. Structs do not need to have any fields defined. A field-less struct can be used as placeholder for methods and interfaces.
 

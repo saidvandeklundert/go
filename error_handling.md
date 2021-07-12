@@ -10,11 +10,12 @@ type error interface {
 }
 ```
 
-Note that an error is an interface. As such, returning `nil` is a valid value for one and it explains the convention as to why it is used to indicate 'no error'. Namely, `nil` is the zero value for an interface.
+The `error` interface method, `Error()`, specifies a `string` is returned. Since the error is an interface, returning `nil` is a valid value for one and it explains the convention as to why it is used to indicate 'no error'. Namely, `nil` is the zero value for an interface.
 
-The `error` interface method, `Error()`, specifies a `string` is returned. 
+
 
 The following is an example where an error is raised inside a function:
+
 ```go
 func exampleError(s string) (string, error) {
 	if len(s) <= 6 {
@@ -26,7 +27,7 @@ func exampleError(s string) (string, error) {
 }
 ```
 
-We can also raise and format errors using a convenient `fmt` function, like so:
+We can also raise and format errors using the convenient `fmt.Errorf()` function, which returns a function:
 
 ```go
 func exampleError(s string) (string, error) {
@@ -64,6 +65,7 @@ This can be used to create your own custom errors.
 The `errors` packages is part of the standard library and the documentation is found [here](https://pkg.go.dev/errors).
 
 The example listed in the package is something like this:
+
 ```go
 import "errors"
 
@@ -86,9 +88,12 @@ func (e *errorString) Error() string {
 	return e.s
 }
 ```
+We can see that the `type errorString` struct satisfies the error interface.
 
 
-Checking for an error and logging fatal:
+## Checking for an error an logging fatal:
+
+
 ```go
 import "log"
 if err != nil {
@@ -97,9 +102,36 @@ if err != nil {
 }
 ```
 
-Instead of logging an error, you can also inspect the error and initiate followup actions:
+Note that `Fatal` is equivalent to `Print()` followed by a call to `os.Exit(1)`. You can also consider `Fatalf`, which is equivalent to `Printf()` followed by a call to `os.Exit(1)`.
+
+## Check for an error and perform followup action:
+
 ```go
 if err != nil {
 	if strings.Contains(err.Error(), "404") {
 		Error.Println(err)
+```
+
+## Storing an error as a var and emitting it where applicable
+
+Sometimes, errors are defined grouped together at the top of a package. The code in the rest of the package then refers to those variables in case an errors needs to be returned.
+
+Example:
+
+```go
+// Defining an error and storing it as a variable.
+// Example taken from gzip, hence the reference to that package.
+var (
+	// ErrChecksum is returned when reading GZIP data that has an invalid checksum.
+	ErrChecksum = errors.New("gzip: invalid checksum")
+)
+
+func CheckSum() (string, error) {
+	if "checksum" != "CHECKSUM" {
+		err := ErrChecksum
+		return "", err
+	}
+	return "s", nil
+}
+CheckSum()	//  gzip: invalid checksum
 ```

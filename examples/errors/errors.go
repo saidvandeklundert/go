@@ -23,8 +23,26 @@ func anotherExampleError(s string) (string, error) {
 
 }
 
+// Defining an error and storing it as a variable.
+// Example taken from gzip, hence the reference to that package.
+var (
+	// ErrChecksum is returned when reading GZIP data that has an invalid checksum.
+	ErrChecksum = errors.New("gzip: invalid checksum")
+)
+
+// This function will fail
+func CheckSum() (string, error) {
+	if "checksum" != "CHECKSUM" {
+		err := ErrChecksum
+		return "", err
+	}
+	return "s", nil
+}
+
 func main() {
 	fmt.Println(exampleError("This will not throw an error"))
 	fmt.Println(exampleError("Oops!"))
 	fmt.Println(anotherExampleError("Oops!"))
+	fmt.Println(CheckSum())
+
 }

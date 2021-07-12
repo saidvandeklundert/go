@@ -185,6 +185,14 @@ for i := 0; i <= 3; i++ {
 */
 ```
 
+Looping over a slice:
+
+```go
+hosts := []string{"1.1.1.1", "2.2.2.2", "3.3.3.3"}
+for i := 0; i < len(s); i++ {
+    fmt.Printf("%v ", s[i])
+}
+```
 ### 2: Condition-only for loop:
 
 Leaving off the initializer and the post statement (increment) makes the for statement behave like a `while` loop.
